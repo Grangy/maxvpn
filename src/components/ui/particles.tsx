@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { useMobile } from '@/lib/hooks/use-mobile';
 
 interface Particle {
   x: number;
@@ -16,8 +17,12 @@ export default function Particles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number | null>(null);
+  const isMobile = useMobile();
 
   useEffect(() => {
+    // Don't render particles on mobile for performance
+    if (isMobile) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -31,16 +36,17 @@ export default function Particles() {
 
     const createParticles = () => {
       const particles: Particle[] = [];
-      const particleCount = Math.floor((canvas.width * canvas.height) / 15000);
+      // Reduce particle count for better performance
+      const particleCount = Math.floor((canvas.width * canvas.height) / 25000);
 
       for (let i = 0; i < particleCount; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          size: Math.random() * 2 + 1,
-          opacity: Math.random() * 0.5 + 0.1,
+          vx: (Math.random() - 0.5) * 0.3, // Slower movement
+          vy: (Math.random() - 0.5) * 0.3,
+          size: Math.random() * 1.5 + 0.5, // Smaller particles
+          opacity: Math.random() * 0.3 + 0.1, // Lower opacity
           color: Math.random() > 0.5 ? '#3b82f6' : '#8b5cf6'
         });
       }
@@ -68,19 +74,19 @@ export default function Particles() {
         ctx.fillStyle = particle.color + Math.floor(particle.opacity * 255).toString(16).padStart(2, '0');
         ctx.fill();
 
-        // Draw connections
+        // Draw connections (reduced distance for performance)
         particlesRef.current.forEach((otherParticle, otherIndex) => {
           if (index !== otherIndex) {
             const dx = particle.x - otherParticle.x;
             const dy = particle.y - otherParticle.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < 100) {
+            if (distance < 60) { // Reduced connection distance
               ctx.beginPath();
               ctx.moveTo(particle.x, particle.y);
               ctx.lineTo(otherParticle.x, otherParticle.y);
-              ctx.strokeStyle = particle.color + Math.floor((1 - distance / 100) * 50).toString(16).padStart(2, '0');
-              ctx.lineWidth = 0.5;
+              ctx.strokeStyle = particle.color + Math.floor((1 - distance / 60) * 30).toString(16).padStart(2, '0');
+              ctx.lineWidth = 0.3;
               ctx.stroke();
             }
           }
@@ -107,12 +113,17 @@ export default function Particles() {
       }
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [isMobile]);
+
+  // Don't render on mobile
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 pointer-events-none opacity-30"
+      className="absolute inset-0 pointer-events-none opacity-20"
       style={{ zIndex: 1 }}
     />
   );

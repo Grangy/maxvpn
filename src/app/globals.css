@@ -131,16 +131,29 @@ li {
 }
 
 /* Mobile optimizations */
-@media (max-width: 640px) {
-  .glass-card {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+@media (max-width: 768px) {
+  /* Disable heavy animations on mobile */
+  * {
+    animation-duration: 0.1s !important;
+    transition-duration: 0.1s !important;
   }
   
-  /* Reduce motion on mobile for better performance */
-  * {
-    animation-duration: 0.3s !important;
-    transition-duration: 0.3s !important;
+  /* Disable specific problematic animations */
+  .animate-pulse,
+  .animate-bounce,
+  .animate-ping,
+  .animate-spin {
+    animation: none !important;
+  }
+  
+  /* Disable backdrop blur on mobile for performance */
+  .glass-card,
+  .glass,
+  .glass-dark,
+  .glass-blue {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(30, 41, 59, 0.8) !important;
   }
   
   /* Better touch targets */
@@ -163,6 +176,89 @@ li {
   h3 {
     font-size: 1.5rem !important;
     line-height: 1.4 !important;
+  }
+  
+  /* Disable hover effects on mobile */
+  .hover-lift:hover,
+  .hover-glow:hover,
+  .hover-scale:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Fix z-index issues */
+  .fixed {
+    z-index: 1000 !important;
+  }
+  
+  /* Disable particles and heavy effects */
+  canvas {
+    display: none !important;
+  }
+  
+  /* Simplify background effects */
+  .bg-gradient-to-br,
+  .bg-gradient-to-r {
+    background: #0f172a !important;
+  }
+  
+  /* Remove blur effects */
+  .blur-3xl,
+  .blur-2xl,
+  .blur-xl {
+    filter: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Even more aggressive optimizations for small screens */
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  /* Remove all background effects */
+  .absolute {
+    display: none !important;
+  }
+  
+  /* Simplify cards */
+  .glass-card {
+    background: rgba(30, 41, 59, 0.9) !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+  }
+  
+  /* Fix mobile layout issues */
+  .fixed {
+    position: fixed !important;
+    z-index: 1000 !important;
+  }
+  
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden !important;
+  }
+  
+  /* Better spacing for mobile */
+  .py-20 {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+  
+  /* Simplify gradients on mobile */
+  .bg-gradient-to-br,
+  .bg-gradient-to-r {
+    background: #0f172a !important;
+  }
+  
+  /* Remove text shimmer on mobile */
+  .text-shimmer {
+    background: linear-gradient(90deg, #ffffff, #3b82f6, #ffffff) !important;
+    background-size: 200% 100% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    animation: none !important;
   }
 }
 

@@ -5,9 +5,11 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Check, Zap, Crown, Star, ArrowRight } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
+import { useMobile } from '@/lib/hooks/use-mobile';
 
 export default function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false);
+  const isMobile = useMobile();
 
   const plans = [
     {
@@ -71,9 +73,9 @@ export default function Pricing() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.0, ease: "easeOut" }}
+          transition={isMobile ? { duration: 0.1 } : { duration: 1.0, ease: "easeOut" }}
           viewport={{ once: true, margin: "-100px" }}
           className="text-center mb-16"
         >
@@ -121,9 +123,9 @@ export default function Pricing() {
           {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              initial={isMobile ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 20, scale: 0.95 }}
               whileInView={{ opacity: 1, y: 0, scale: plan.popular ? 1.05 : 1 }}
-              transition={{ duration: 0.8, delay: index * 0.15, ease: "easeOut" }}
+              transition={isMobile ? { duration: 0.1 } : { duration: 0.8, delay: index * 0.15, ease: "easeOut" }}
               viewport={{ once: true, margin: "-100px" }}
               className={`relative p-4 sm:p-6 lg:p-8 rounded-2xl border-2 ${
                 plan.popular 

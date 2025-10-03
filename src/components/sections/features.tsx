@@ -14,8 +14,10 @@ import {
   Server,
   Eye
 } from 'lucide-react';
+import { useMobile } from '@/lib/hooks/use-mobile';
 
 export default function Features() {
+  const isMobile = useMobile();
   const features = [
     {
       icon: Zap,
@@ -67,9 +69,9 @@ export default function Features() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={isMobile ? { duration: 0.1 } : { duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
@@ -83,18 +85,18 @@ export default function Features() {
 
         {/* Stats */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={isMobile ? { duration: 0.1 } : { duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true }}
           className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20"
         >
           {stats.map((stat, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={isMobile ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={isMobile ? { duration: 0.1 } : { duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
               className="text-center p-8 glass-card rounded-2xl hover:border-blue-600/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 group"
             >
@@ -116,9 +118,9 @@ export default function Features() {
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
+              initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+              transition={isMobile ? { duration: 0.1 } : { duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
               viewport={{ once: true }}
               className="group p-8 glass-card rounded-2xl hover:border-blue-600/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 hover:scale-105"
             >
