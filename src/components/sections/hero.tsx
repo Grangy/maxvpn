@@ -26,7 +26,7 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 pt-20">
       {/* Background Effects - Simplified for mobile */}
       {!isMobile && (
         <div className="absolute inset-0">
@@ -62,7 +62,7 @@ export default function Hero() {
               animation="pulse"
               duration={1.5}
             />
-            <span>Быстрое подключение через Telegram</span>
+            <span className="text-center">Быстрое подключение через Telegram</span>
           </motion.div>
 
           {/* Main Heading */}
@@ -126,7 +126,7 @@ export default function Hero() {
           >
             <Button
               size="lg"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-2xl hover:shadow-blue-500/25 hover:scale-105 transition-all duration-300 w-full sm:w-auto hover-lift hover-glow"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-2xl hover:shadow-blue-500/25 hover:scale-105 transition-all duration-300 w-full sm:w-auto hover-lift hover-glow border border-blue-500/30"
               onClick={() => setIsModalOpen(true)}
             >
               <AnimatedIcon 
