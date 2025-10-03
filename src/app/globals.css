@@ -409,6 +409,36 @@ li {
   .mb-8 {
     margin-bottom: 2rem !important;
   }
+  
+  /* 26. Fix guarantee block on mobile */
+  .inline-flex.items-center {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+  
+  /* 27. Better guarantee text wrapping */
+  .text-center.leading-tight {
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+  }
+  
+  /* 28. Fix guarantee icon positioning */
+  .flex-shrink-0 {
+    flex-shrink: 0 !important;
+  }
+  
+  /* 29. Better guarantee block padding */
+  .px-3 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+  
+  /* 30. Improve guarantee block max-width */
+  .max-w-full {
+    max-width: 100% !important;
+  }
 }
 
 /* Section transitions */
