@@ -260,6 +260,96 @@ li {
     background-clip: text !important;
     animation: none !important;
   }
+  
+  /* 15 Additional Mobile Optimizations */
+  
+  /* 1. Fix modal z-index issues */
+  .fixed.inset-0 {
+    z-index: 9999 !important;
+  }
+  
+  /* 2. Better button sizing for mobile */
+  button, .btn {
+    min-height: 48px !important;
+    min-width: 48px !important;
+    font-size: 16px !important;
+  }
+  
+  /* 3. Improve text readability */
+  .text-sm {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* 4. Better spacing between elements */
+  .space-y-4 > * + * {
+    margin-top: 1rem !important;
+  }
+  
+  /* 5. Fix overflow issues */
+  .overflow-hidden {
+    overflow: visible !important;
+  }
+  
+  /* 6. Better grid layouts for mobile */
+  .grid-cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+  
+  /* 7. Improve form elements */
+  input, textarea, select {
+    font-size: 16px !important;
+    padding: 12px !important;
+  }
+  
+  /* 8. Better touch targets */
+  a, button, [role="button"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* 9. Fix text wrapping */
+  .whitespace-nowrap {
+    white-space: normal !important;
+  }
+  
+  /* 10. Better modal sizing */
+  .max-w-2xl {
+    max-width: 95vw !important;
+    margin: 1rem !important;
+  }
+  
+  /* 11. Improve navigation */
+  nav {
+    padding: 0 1rem !important;
+  }
+  
+  /* 12. Better hero section spacing */
+  .min-h-screen {
+    min-height: 100vh !important;
+    padding-top: 5rem !important;
+  }
+  
+  /* 13. Fix badge text wrapping */
+  .inline-flex {
+    flex-wrap: wrap !important;
+    text-align: center !important;
+  }
+  
+  /* 14. Better card layouts */
+  .p-8 {
+    padding: 1.5rem !important;
+  }
+  
+  /* 15. Improve scroll behavior */
+  html {
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
 }
 
 /* Section transitions */

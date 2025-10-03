@@ -60,7 +60,7 @@ export default function Features() {
   const stats = [
     { number: '10', label: 'Гбит/с', suffix: 'максимальная скорость' },
     { number: '∞', label: 'защита', suffix: 'квантовое шифрование' },
-    { number: '99.9%', label: 'uptime', suffix: 'стабильность работы' },
+    { number: '99.9%', label: 'uptime', suffix: 'стабильность' },
     { number: '1', label: 'минута', suffix: 'время подключения' }
   ];
 
@@ -89,7 +89,7 @@ export default function Features() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={isMobile ? { duration: 0.1 } : { duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 mb-20"
         >
           {stats.map((stat, index) => (
             <motion.div
