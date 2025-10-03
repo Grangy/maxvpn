@@ -25,7 +25,7 @@ export default function QuickConnectModal({ isOpen, onClose }: QuickConnectModal
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Быстрое подключение" size="lg">
+    <ResponsiveModal isOpen={isOpen} onClose={onClose} title="Быстрое подключение" size="lg">
       <div className="space-y-4 sm:space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -94,6 +94,6 @@ export default function QuickConnectModal({ isOpen, onClose }: QuickConnectModal
           </Button>
         </div>
       </div>
-    </Modal>
+    </ResponsiveModal>
   );
 }
