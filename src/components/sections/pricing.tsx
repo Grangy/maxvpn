@@ -87,32 +87,41 @@ export default function Pricing() {
           </p>
 
           {/* Billing Toggle */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-12 px-4">
-            <div className="flex items-center space-x-3 sm:space-x-4">
-              <span className={`text-sm sm:text-lg font-medium ${!isAnnual ? 'text-white' : 'text-gray-400'}`}>
-                Месячная оплата
-              </span>
-              <button
-                onClick={() => setIsAnnual(!isAnnual)}
-                className="relative inline-flex h-6 w-11 sm:h-8 sm:w-14 items-center rounded-full bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                <span
-                  className={`inline-block h-4 w-4 sm:h-6 sm:w-6 transform rounded-full bg-blue-600 transition-transform ${
-                    isAnnual ? 'translate-x-6 sm:translate-x-7' : 'translate-x-1'
+          <div className="flex flex-col items-center justify-center gap-4 mb-8 sm:mb-12 px-4">
+            {/* Toggle Container */}
+            <div className="flex items-center justify-center w-full max-w-sm">
+              <div className="flex items-center space-x-2 sm:space-x-3 bg-slate-800/50 rounded-xl p-1 border border-slate-700">
+                <button
+                  onClick={() => setIsAnnual(false)}
+                  className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
+                    !isAnnual 
+                      ? 'bg-blue-600 text-white shadow-lg' 
+                      : 'text-gray-400 hover:text-white'
                   }`}
-                />
-              </button>
-              <span className={`text-sm sm:text-lg font-medium ${isAnnual ? 'text-white' : 'text-gray-400'}`}>
-                Годовая оплата
-              </span>
+                >
+                  Месячная
+                </button>
+                <button
+                  onClick={() => setIsAnnual(true)}
+                  className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 ${
+                    isAnnual 
+                      ? 'bg-blue-600 text-white shadow-lg' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Годовая
+                </button>
+              </div>
             </div>
+            
+            {/* Savings Badge */}
             {isAnnual && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-green-600 text-white px-2 py-1 sm:px-3 rounded-full text-xs sm:text-sm font-medium"
+                className="bg-green-600/20 border border-green-600/30 text-green-400 px-3 py-1 rounded-full text-xs sm:text-sm font-medium"
               >
-                Экономия до 20%
+                💰 Экономия до 20%
               </motion.div>
             )}
           </div>
@@ -127,7 +136,7 @@ export default function Pricing() {
               whileInView={{ opacity: 1, y: 0, scale: plan.popular ? 1.05 : 1 }}
               transition={isMobile ? { duration: 0.1 } : { duration: 0.8, delay: index * 0.15, ease: "easeOut" }}
               viewport={{ once: true, margin: "-100px" }}
-              className={`relative p-4 sm:p-6 lg:p-8 rounded-2xl border-2 ${
+              className={`relative p-3 sm:p-4 lg:p-6 rounded-xl border-2 ${
                 plan.popular 
                   ? 'bg-gradient-to-br from-blue-600/10 to-blue-600/10 border-blue-600 hover:shadow-lg hover:shadow-blue-500/20' 
                   : 'bg-slate-800/30 border-slate-700 hover:border-blue-600/50 hover:bg-slate-800/50 hover:shadow-lg hover:shadow-blue-500/10'
@@ -151,11 +160,11 @@ export default function Pricing() {
                   }`} />
                 </div>
                 
-                <h3 className="text-xl sm:text-2xl font-bebas text-white mb-2">
+                <h3 className="text-lg sm:text-xl font-bebas text-white mb-2">
                   {plan.name}
                 </h3>
                 
-                <p className="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6">
+                <p className="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-4">
                   {plan.description}
                 </p>
 
