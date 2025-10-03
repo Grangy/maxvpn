@@ -21,7 +21,7 @@ export default function ResponsiveModal({
   title, 
   children, 
   size = 'md',
-  showCloseButton = true,
+  showCloseButton = false,
   closeButtonText = 'Закрыть'
 }: ResponsiveModalProps) {
   useEffect(() => {

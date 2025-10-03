@@ -83,16 +83,6 @@ export default function QuickConnectModal({ isOpen, onClose }: QuickConnectModal
           </ul>
         </div>
 
-        {/* Close button at bottom */}
-        <div className="pt-4 border-t border-slate-700">
-          <Button
-            onClick={onClose}
-            variant="outline"
-            className="w-full border-slate-600 text-gray-300 hover:bg-slate-700 hover:text-white"
-          >
-            Закрыть
-          </Button>
-        </div>
       </div>
     </ResponsiveModal>
   );
