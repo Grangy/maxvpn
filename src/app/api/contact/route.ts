@@ -3,12 +3,14 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, message, plan } = body;
+    const { telegram, email, phone, message, plan } = body;
+    
+    console.log('Contact form data:', { telegram, email, phone, message, plan });
 
     // Validate required fields
-    if (!name || !phone) {
+    if (!telegram) {
       return NextResponse.json(
-        { error: 'Имя и телефон обязательны' },
+        { error: 'Telegram обязателен' },
         { status: 400 }
       );
     }
@@ -17,14 +19,23 @@ export async function POST(request: NextRequest) {
     const telegramMessage = `
 🆕 Новая заявка с сайта MaxVPN
 
-👤 Имя: ${name}
-📞 Телефон: ${phone}
+📱 Telegram: ${telegram}
+📞 Телефон: ${phone || 'Не указан'}
 📧 Email: ${email || 'Не указан'}
 📋 Тариф: ${plan || 'Не выбран'}
 💬 Сообщение: ${message || 'Не указано'}
 
 ⏰ Время: ${new Date().toLocaleString('ru-RU')}
     `.trim();
+
+    // Check if Telegram is configured
+    if (!process.env.TELEGRAM_BOT_TOKEN || !process.env.TELEGRAM_CHAT_ID) {
+      console.log('Telegram not configured, skipping notification');
+      return NextResponse.json(
+        { message: 'Заявка получена (Telegram не настроен)' },
+        { status: 200 }
+      );
+    }
 
     // Send to Telegram
     const telegramResponse = await fetch(
