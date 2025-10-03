@@ -12,14 +12,14 @@ import {
 import LoadingSpinner from '@/components/ui/loading-spinner';
 
 interface FormData {
-  name: string;
+  telegram: string;
   message: string;
   plan: string;
 }
 
 export default function Contact() {
   const [formData, setFormData] = useState<FormData>({
-    name: '',
+    telegram: '',
     message: '',
     plan: ''
   });
@@ -55,7 +55,7 @@ export default function Contact() {
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({
-          name: '',
+          telegram: '',
           message: '',
           plan: ''
         });
@@ -104,18 +104,18 @@ export default function Contact() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                  Имя *
+                <label htmlFor="telegram" className="block text-sm font-medium text-gray-300 mb-2">
+                  Ваш Telegram *
                 </label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                  id="telegram"
+                  name="telegram"
+                  value={formData.telegram}
                   onChange={handleInputChange}
                   required
                   className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  placeholder="Ваше имя"
+                  placeholder="@username или +7XXXXXXXXXX"
                 />
               </div>
 
