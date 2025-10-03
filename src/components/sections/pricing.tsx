@@ -243,15 +243,17 @@ export default function Pricing() {
 
         {/* Money Back Guarantee */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={isMobile ? { duration: 0.1 } : { duration: 0.8, delay: 0.6 }}
           viewport={{ once: true }}
-          className="mt-12 text-center"
+          className="mt-8 sm:mt-12 text-center px-4"
         >
-          <div className="inline-flex items-center px-6 py-3 bg-green-600/10 border border-green-600/20 rounded-full text-green-400">
-            <Check className="w-5 h-5 mr-2" />
-            Гарантия возврата денег в течение 30 дней
+          <div className="inline-flex items-center px-3 sm:px-6 py-2 sm:py-3 bg-green-600/10 border border-green-600/20 rounded-full text-green-400 text-sm sm:text-base max-w-full">
+            <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
+            <span className="text-center leading-tight">
+              Гарантия возврата денег в течение 30 дней
+            </span>
           </div>
         </motion.div>
       </div>
