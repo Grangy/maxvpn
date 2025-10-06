@@ -1,13 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Shield, Zap, Globe, Smartphone, Laptop, Monitor } from 'lucide-react';
 import QuickConnectModal from '@/components/ui/quick-connect-modal';
+import { useMobile } from '@/lib/hooks/use-mobile';
+
+// Import components normally for now to avoid type issues
+import { motion } from 'framer-motion';
 import AnimatedIcon from '@/components/ui/animated-icon';
 import Particles from '@/components/ui/particles';
-import { useMobile } from '@/lib/hooks/use-mobile';
 
 export default function Hero() {
   const [isModalOpen, setIsModalOpen] = useState(false);
