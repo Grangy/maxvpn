@@ -1,6 +1,9 @@
 'use client';
 
 import React from 'react';
+import dynamic from 'next/dynamic';
+
+// Import framer-motion normally for now to avoid type issues
 import { motion } from 'framer-motion';
 import { 
   Zap, 

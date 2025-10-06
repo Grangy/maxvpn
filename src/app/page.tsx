@@ -1,9 +1,24 @@
+import dynamic from 'next/dynamic';
 import Navigation from '@/components/sections/navigation';
 import Hero from '@/components/sections/hero';
-import Features from '@/components/sections/features';
-import Pricing from '@/components/sections/pricing';
-import Contact from '@/components/sections/contact';
-import Footer from '@/components/sections/footer';
+import LazySection from '@/components/ui/lazy-section';
+
+// Lazy load non-critical components with intersection observer
+const Features = dynamic(() => import('@/components/sections/features'), {
+  loading: () => <div className="h-96 bg-slate-900/50 animate-pulse rounded-lg" />,
+});
+
+const Pricing = dynamic(() => import('@/components/sections/pricing'), {
+  loading: () => <div className="h-96 bg-slate-900/50 animate-pulse rounded-lg" />,
+});
+
+const Contact = dynamic(() => import('@/components/sections/contact'), {
+  loading: () => <div className="h-96 bg-slate-900/50 animate-pulse rounded-lg" />,
+});
+
+const Footer = dynamic(() => import('@/components/sections/footer'), {
+  loading: () => <div className="h-32 bg-slate-900/50 animate-pulse" />,
+});
 
 export default function Home() {
   return (
@@ -20,15 +35,15 @@ export default function Home() {
         <div className="section-transition">
           <Hero />
         </div>
-        <div className="section-transition">
+        <LazySection>
           <Features />
-        </div>
-        <div className="section-transition">
+        </LazySection>
+        <LazySection>
           <Pricing />
-        </div>
-        <div className="section-transition">
+        </LazySection>
+        <LazySection>
           <Contact />
-        </div>
+        </LazySection>
       </main>
       <Footer />
     </div>

@@ -1,15 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from './button';
 import { 
   MessageCircle, 
   Zap, 
   CheckCircle, 
-  ArrowRight,
-  Loader2,
-  AlertCircle
+  ArrowRight
 } from 'lucide-react';
 import ResponsiveModal from './responsive-modal';
 
