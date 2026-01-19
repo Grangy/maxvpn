@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Shield, Zap, Globe, Smartphone, Laptop, Monitor } from 'lucide-react';
+import { Shield, Zap, Globe, Smartphone, Laptop, Monitor, Lock } from 'lucide-react';
 import QuickConnectModal from '@/components/ui/quick-connect-modal';
 import AnimatedIcon from '@/components/ui/animated-icon';
 import Particles from '@/components/ui/particles';
@@ -20,9 +20,9 @@ export default function Hero() {
   ];
 
   const features = [
-    { icon: Zap, text: 'До 10 Гбит/с' },
-    { icon: Shield, text: 'VLESS технология' },
-    { icon: Globe, text: '99.9% uptime' },
+    { icon: Shield, text: 'Надёжное шифрование' },
+    { icon: Lock, text: 'Защита приватности' },
+    { icon: Globe, text: 'Глобальный контент' },
   ];
 
   return (
@@ -72,9 +72,9 @@ export default function Hero() {
             transition={isMobile ? { duration: 0.1 } : { duration: 0.8, delay: 0.4 }}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bebas text-white leading-tight"
           >
-            <span className="block">Максимальная</span>
+            <span className="block">Защита цифровой</span>
             <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent text-shimmer">
-              Скорость VPN
+              жизни
             </span>
           </motion.h1>
 
@@ -85,10 +85,16 @@ export default function Hero() {
             transition={isMobile ? { duration: 0.1 } : { duration: 0.8, delay: 0.6 }}
             className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4"
           >
-            ⚡ До <span className="text-blue-400 font-bold bg-blue-400/10 px-2 py-1 rounded">10 Гбит/с</span> скорости • 
-            🔒 Технология <span className="text-purple-400 font-bold bg-purple-400/10 px-2 py-1 rounded">VLESS</span> • 
-            📱 Все платформы • 
-            🚀 Подключение за минуту
+            с <span className="text-blue-400 font-bold bg-blue-400/10 px-2 py-1 rounded">Kaspersky Secure Connection</span>
+          </motion.p>
+          
+          <motion.p 
+            initial={isMobile ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={isMobile ? { duration: 0.1 } : { duration: 0.8, delay: 0.8 }}
+            className="text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed px-4 mt-4"
+          >
+            🔒 Надёжное шифрование • 🛡️ Защита приватности • 📱 Все платформы • 🚀 Подключение за минуту
           </motion.p>
 
           {/* Features */}

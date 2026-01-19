@@ -52,7 +52,7 @@ export default function PrivacyPage() {
             <section className="bg-slate-800/50 rounded-xl p-8 border border-slate-700">
               <h2 className="text-2xl font-bebas text-white mb-4">1. Сбор информации</h2>
               <p className="text-gray-300 leading-relaxed">
-                Мы собираем минимально необходимую информацию для предоставления услуг VPN:
+                Мы собираем минимально необходимую информацию для предоставления услуг защиты:
               </p>
               <ul className="list-disc list-inside text-gray-300 mt-4 space-y-2">
                 <li>Имя пользователя для связи</li>
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
                 Ваши данные используются исключительно для:
               </p>
               <ul className="list-disc list-inside text-gray-300 mt-4 space-y-2">
-                <li>Предоставления VPN услуг</li>
+                <li>Предоставления услуг защиты</li>
                 <li>Технической поддержки</li>
                 <li>Улучшения качества сервиса</li>
                 <li>Соблюдения требований законодательства</li>

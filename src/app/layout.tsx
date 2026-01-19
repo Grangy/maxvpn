@@ -18,56 +18,57 @@ const unbounded = Unbounded({
 
 export const metadata: Metadata = {
   title: {
-    default: "MaxVPN - Быстрый и защищённый VPN до 10 Гбит/с",
-    template: "%s | MaxVPN"
+    default: "MaxGroot - Защита цифровой жизни с Kaspersky Secure Connection",
+    template: "%s | MaxGroot"
   },
-  description: "⚡ Быстрый и защищённый VPN до 10 Гбит/с. 🔒 Технология VLESS — максимум анонимности и обход блокировок. 📱 iOS / Android / Windows / macOS. Подключение за минуту через Telegram.",
+  description: "🔒 Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты приватности. Предотвратите перехват паролей, банковских реквизитов и другой конфиденциальной информации. Доступ к глобальному контенту Netflix, Amazon Prime Video, YouTube и других платформ.",
   keywords: [
-    "VPN",
-    "максимальная скорость",
-    "анонимность",
-    "обход блокировок",
-    "VLESS",
+    "Kaspersky Secure Connection",
+    "защита приватности",
+    "шифрование",
+    "защита данных",
+    "безопасность",
     "iOS",
     "Android",
     "Windows",
     "macOS",
     "Telegram бот",
-    "быстрое подключение"
+    "защита паролей",
+    "защита банковских данных"
   ],
-  authors: [{ name: "MaxVPN Team" }],
-  creator: "MaxVPN",
-  publisher: "MaxVPN",
+  authors: [{ name: "MaxGroot Team" }],
+  creator: "MaxGroot",
+  publisher: "MaxGroot",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://maxvpn.live"),
+  metadataBase: new URL("https://maxgroot.live"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "ru_RU",
-    url: "https://maxvpn.live",
-    title: "MaxVPN - Быстрый и защищённый VPN до 10 Гбит/с",
-    description: "⚡ Быстрый и защищённый VPN до 10 Гбит/с. 🔒 Технология VLESS — максимум анонимности и обход блокировок.",
-    siteName: "MaxVPN",
+    url: "https://maxgroot.live",
+    title: "MaxGroot - Защита цифровой жизни с Kaspersky Secure Connection",
+    description: "🔒 Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации.",
+    siteName: "MaxGroot",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/logo-rounded.png",
         width: 1200,
         height: 630,
-        alt: "MaxVPN - Быстрый и защищённый VPN",
+        alt: "MaxGroot - Защита цифровой жизни",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "MaxVPN - Быстрый и защищённый VPN до 10 Гбит/с",
-    description: "⚡ Быстрый и защищённый VPN до 10 Гбит/с. 🔒 Технология VLESS — максимум анонимности и обход блокировок.",
-    images: ["/og-image.jpg"],
+    title: "MaxGroot - Защита цифровой жизни с Kaspersky Secure Connection",
+    description: "🔒 Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации.",
+    images: ["/logo-rounded.png"],
   },
   robots: {
     index: true,
@@ -83,6 +84,9 @@ export const metadata: Metadata = {
   verification: {
     google: "your-google-verification-code",
   },
+  other: {
+    "format-detection": "telephone=no",
+  },
 };
 
 export default function RootLayout({
@@ -97,6 +101,8 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#0f172a" />
@@ -105,6 +111,24 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "MaxGroot",
+              "description": "Защита цифровой жизни с Kaspersky Secure Connection",
+              "url": "https://maxgroot.live",
+              "logo": "https://maxgroot.live/logo-rounded.png",
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "Customer Service",
+                "availableLanguage": "Russian"
+              }
+            })
+          }}
+        />
         <style dangerouslySetInnerHTML={{
           __html: `
             :root{--background:#0f172a;--foreground:#f8fafc}

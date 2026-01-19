@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     // Prepare message for Telegram
     const telegramMessage = `
-🆕 Новая заявка с сайта MaxVPN
+🆕 Новая заявка с сайта MaxGroot
 
 📱 Telegram: ${telegram}
 📞 Телефон: ${phone || 'Не указан'}

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Shield, MessageCircle, ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -38,18 +39,18 @@ export default function Footer() {
             {/* Brand */}
             <div className="lg:col-span-1">
               <div className="flex items-center space-x-2 mb-6">
-                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg">
-                  <Shield className="w-6 h-6 text-white" />
+                <div className="flex items-center justify-center w-10 h-10 rounded-lg overflow-hidden">
+                  <Image src="/logo-rounded.png" alt="MaxGroot Logo" width={40} height={40} className="object-cover" />
                 </div>
                 <div className="flex items-center space-x-1">
                   <span className="text-2xl font-bebas text-white">Max</span>
-                  <span className="text-2xl font-bebas text-blue-400">VPN</span>
+                  <span className="text-2xl font-bebas text-blue-400">Groot</span>
                 </div>
               </div>
               
               <p className="text-gray-400 mb-6 leading-relaxed">
-                Быстрый и защищённый VPN с технологией VLESS и квантовым шифрованием. 
-                Максимальная скорость до 10 Гбит/с и полная анонимность.
+                Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты 
+                приватности и конфиденциальной информации. Доступ к глобальному контенту.
               </p>
 
               <div className="space-y-3">
@@ -131,7 +132,7 @@ export default function Footer() {
         <div className="py-8 border-t border-slate-800">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} MaxVPN. Все права защищены.
+              © {new Date().getFullYear()} MaxGroot. Все права защищены.
             </div>
             
             <div className="flex items-center space-x-6">

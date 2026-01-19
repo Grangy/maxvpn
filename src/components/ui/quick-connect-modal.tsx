@@ -34,10 +34,10 @@ export default function QuickConnectModal({ isOpen, onClose }: QuickConnectModal
             <Zap className="w-8 h-8 sm:w-10 sm:h-10 text-blue-400" />
           </div>
           <h3 className="text-xl sm:text-2xl font-bebas text-white mb-3 sm:mb-4">
-            Подключиться к MaxVPN
+            Подключиться к MaxGroot
           </h3>
           <p className="text-sm sm:text-base text-gray-300 mb-4 sm:mb-6 px-2">
-            Используйте Telegram бота для быстрой настройки и подключения к VPN.
+            Используйте Telegram бота для быстрой настройки и подключения к защищённому соединению.
           </p>
         </motion.div>
 
@@ -60,19 +60,19 @@ export default function QuickConnectModal({ isOpen, onClose }: QuickConnectModal
           <ul className="space-y-2 text-xs sm:text-sm text-gray-300">
             <li className="flex items-center">
               <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400 mr-2 sm:mr-3 flex-shrink-0" />
-              <span>Скорость до 10 Гбит/с</span>
+              <span>Надёжное шифрование</span>
             </li>
             <li className="flex items-center">
               <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400 mr-2 sm:mr-3 flex-shrink-0" />
-              <span>VLESS технология</span>
+              <span>Защита приватности</span>
             </li>
             <li className="flex items-center">
               <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400 mr-2 sm:mr-3 flex-shrink-0" />
-              <span>Обход любых блокировок</span>
+              <span>Защита паролей и банковских данных</span>
             </li>
             <li className="flex items-center">
               <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400 mr-2 sm:mr-3 flex-shrink-0" />
-              <span>Полная анонимность</span>
+              <span>Доступ к глобальному контенту</span>
             </li>
             <li className="flex items-center">
               <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400 mr-2 sm:mr-3 flex-shrink-0" />

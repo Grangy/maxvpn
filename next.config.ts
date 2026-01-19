@@ -46,7 +46,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   
-  // Headers for better caching
+  // Headers for better caching and security
   async headers() {
     return [
       {
@@ -63,6 +63,14 @@ const nextConfig: NextConfig = {
           {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
           },
         ],
       },

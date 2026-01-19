@@ -1,7 +1,7 @@
 {
-  "name": "MaxVPN - Максимальная скорость VPN",
-  "short_name": "MaxVPN",
-  "description": "Современный VPN сервис с технологией VLESS и квантовым шифрованием. Скорость до 10 Гбит/с, полная анонимность и обход любых блокировок.",
+  "name": "MaxGroot - Защита цифровой жизни",
+  "short_name": "MaxGroot",
+  "description": "Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
@@ -62,7 +62,7 @@
     {
       "name": "Подключиться",
       "short_name": "Подключиться",
-      "description": "Быстрое подключение к VPN",
+      "description": "Быстрое подключение к защищённому соединению",
       "url": "/?action=connect",
       "icons": [
         {
@@ -87,7 +87,7 @@
   "related_applications": [
     {
       "platform": "web",
-      "url": "https://maxvpn.live"
+      "url": "https://maxgroot.live"
     }
   ],
   "prefer_related_applications": false,

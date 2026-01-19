@@ -42,7 +42,7 @@ export default function SuccessPage() {
               Оплата <span className="text-green-400">успешна!</span>
             </h1>
             <p className="text-lg text-gray-300 mb-6">
-              Спасибо за покупку! Ваш VPN аккаунт активирован и готов к использованию.
+              Спасибо за покупку! Ваш аккаунт активирован и готов к использованию.
             </p>
           </motion.div>
 
@@ -67,7 +67,7 @@ export default function SuccessPage() {
                 <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-xs text-white font-bold">2</span>
                 </div>
-                <span>Скачайте и настройте VPN клиент на вашем устройстве</span>
+                <span>Скачайте и настройте клиент на вашем устройстве</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-300">
                 <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">

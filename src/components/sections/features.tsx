@@ -20,22 +20,22 @@ export default function Features() {
   const isMobile = useMobile();
   const features = [
     {
-      icon: Zap,
-      title: 'Максимальная скорость',
-      description: 'До 10 Гбит/с скорости подключения для комфортной работы и развлечений',
-      details: ['Оптимизированные серверы', 'Минимальная задержка', 'Стабильное соединение']
+      icon: Shield,
+      title: 'Надёжное шифрование',
+      description: 'Предотвратите перехват паролей, банковских реквизитов и другой конфиденциальной информации',
+      details: ['Военный уровень шифрования', 'Защита от перехвата данных', 'Безопасное соединение']
     },
     {
-      icon: Shield,
-      title: 'VLESS технология',
-      description: 'Современный протокол для максимальной анонимности и обхода блокировок',
-      details: ['Военный уровень шифрования', 'Невидимость для DPI', 'Обход любых блокировок']
+      icon: Lock,
+      title: 'Защита приватности',
+      description: 'Ваши данные защищены от слежки и перехвата с помощью Kaspersky Secure Connection',
+      details: ['Защита паролей', 'Защита банковских данных', 'Конфиденциальность']
     },
     {
       icon: Globe,
-      title: 'Квантовое шифрование',
-      description: 'Революционная технология защиты данных с использованием квантовых алгоритмов',
-      details: ['Квантовые ключи', 'Непреодолимая защита', 'Будущее уже здесь']
+      title: 'Доступ к глобальному контенту',
+      description: 'Netflix, Amazon Prime Video, YouTube и другие платформы доступны из любой точки мира',
+      details: ['Глобальный доступ', 'Высокая скорость', 'Стабильное соединение']
     },
     {
       icon: Smartphone,
@@ -44,10 +44,10 @@ export default function Features() {
       details: ['Нативные приложения', 'Простая настройка', 'Автоматическое подключение']
     },
     {
-      icon: Lock,
-      title: 'Полная анонимность',
-      description: 'Ваши данные защищены от слежки и перехвата',
-      details: ['Нет логов активности', 'Анонимная оплата', 'Защита от утечек']
+      icon: Eye,
+      title: 'Защита от слежки',
+      description: 'Ваши действия в интернете остаются приватными и защищёнными',
+      details: ['Нет логов активности', 'Анонимность', 'Защита от утечек']
     },
     {
       icon: Clock,
@@ -58,8 +58,8 @@ export default function Features() {
   ];
 
   const stats = [
-    { number: '10', label: 'Гбит/с', suffix: 'максимальная скорость' },
-    { number: '∞', label: 'защита', suffix: 'квантовое шифрование' },
+    { number: '256', label: 'бит', suffix: 'уровень шифрования' },
+    { number: '100%', label: 'защита', suffix: 'конфиденциальных данных' },
     { number: '99.9%', label: 'uptime', suffix: 'стабильность' },
     { number: '1', label: 'минута', suffix: 'время подключения' }
   ];
@@ -76,10 +76,10 @@ export default function Features() {
           className="text-center mb-16"
         >
           <h2 className="text-4xl sm:text-5xl font-bebas text-white mb-6">
-            Почему выбирают <span className="text-blue-400">MaxVPN</span>
+            Почему выбирают <span className="text-blue-400">MaxGroot</span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Современные технологии, максимальная скорость и полная анонимность в одном решении
+            Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации
           </p>
         </motion.div>
 
@@ -161,25 +161,25 @@ export default function Features() {
           <div className="flex flex-col lg:flex-row items-center justify-between">
             <div className="text-center lg:text-left mb-8 lg:mb-0">
               <h3 className="text-2xl font-bebas text-white mb-4">
-                VLESS + <span className="text-purple-400">Квантовое шифрование</span>
+                Kaspersky <span className="text-purple-400">Secure Connection</span>
               </h3>
               <p className="text-gray-300 mb-6 max-w-2xl">
-                Революционное сочетание протокола VLESS и квантового шифрования обеспечивает 
-                максимальную скорость, анонимность и обход любых блокировок. Ваше соединение 
-                защищено на квантовом уровне и невидимо для систем глубокой проверки пакетов (DPI).
+                Надёжное шифрование для защиты вашей цифровой жизни. Предотвратите перехват паролей, 
+                банковских реквизитов и другой конфиденциальной информации. Получите доступ к глобальному 
+                контенту Netflix, Amazon Prime Video, YouTube и других платформ.
               </p>
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center text-sm text-blue-400 bg-blue-400/10 px-3 py-1 rounded-full">
                   <Server className="w-4 h-4 mr-2" />
-                  Оптимизированные серверы
+                  Защита данных
                 </div>
                 <div className="flex items-center text-sm text-purple-400 bg-purple-400/10 px-3 py-1 rounded-full">
                   <Eye className="w-4 h-4 mr-2" />
-                  Квантовая невидимость
+                  Приватность
                 </div>
                 <div className="flex items-center text-sm text-blue-400 bg-blue-400/10 px-3 py-1 rounded-full">
                   <Wifi className="w-4 h-4 mr-2" />
-                  Стабильное соединение
+                  Глобальный доступ
                 </div>
               </div>
             </div>

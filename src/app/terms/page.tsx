@@ -46,7 +46,7 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-bebas text-white mb-4">1. Принятие условий</h2>
               <p className="text-gray-300 mb-4">
-                Используя сервис MaxVPN, вы соглашаетесь с данными условиями пользования. 
+                Используя сервис MaxGroot, вы соглашаетесь с данными условиями пользования. 
                 Если вы не согласны с какими-либо условиями, пожалуйста, не используйте наш сервис.
               </p>
               <p className="text-gray-300">
@@ -58,14 +58,14 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-bebas text-white mb-4">2. Описание сервиса</h2>
               <p className="text-gray-300 mb-4">
-                MaxVPN предоставляет VPN-сервис для обеспечения приватности и безопасности в интернете. 
+                MaxGroot предоставляет сервис защиты цифровой жизни с Kaspersky Secure Connection. 
                 Наш сервис включает:
               </p>
               <ul className="list-disc list-inside text-gray-300 space-y-2 mb-4">
-                <li>Шифрование интернет-трафика</li>
-                <li>Смену IP-адреса</li>
-                <li>Обход географических ограничений</li>
-                <li>Защиту от утечек DNS</li>
+                <li>Надёжное шифрование интернет-трафика</li>
+                <li>Защиту паролей и банковских данных</li>
+                <li>Доступ к глобальному контенту</li>
+                <li>Защиту от утечек данных</li>
                 <li>Техническую поддержку</li>
               </ul>
             </section>
@@ -114,7 +114,7 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-bebas text-white mb-4">6. Ограничения ответственности</h2>
               <p className="text-gray-300 mb-4">
-                MaxVPN не несет ответственности за:
+                MaxGroot не несет ответственности за:
               </p>
               <ul className="list-disc list-inside text-gray-300 space-y-2 mb-4">
                 <li>Временные технические сбои</li>
@@ -142,7 +142,7 @@ export default function TermsPage() {
               <h2 className="text-2xl font-bebas text-white mb-4">8. Интеллектуальная собственность</h2>
               <p className="text-gray-300 mb-4">
                 Все права на сервис, включая программное обеспечение, дизайн и контент, 
-                принадлежат MaxVPN. Пользователям запрещается копировать, модифицировать 
+                принадлежат MaxGroot. Пользователям запрещается копировать, модифицировать 
                 или распространять наш контент без разрешения.
               </p>
             </section>
@@ -151,7 +151,7 @@ export default function TermsPage() {
               <h2 className="text-2xl font-bebas text-white mb-4">9. Применимое право</h2>
               <p className="text-gray-300 mb-4">
                 Данные условия регулируются законодательством Российской Федерации. 
-                Все споры разрешаются в судах по месту нахождения MaxVPN.
+                Все споры разрешаются в судах по месту нахождения MaxGroot.
               </p>
             </section>
 
