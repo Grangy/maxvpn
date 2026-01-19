@@ -18,12 +18,12 @@ const unbounded = Unbounded({
 
 export const metadata: Metadata = {
   title: {
-    default: "MaxGroot - Защита цифровой жизни с Kaspersky Secure Connection",
+    default: "MaxGroot - Защита цифровой жизни с MaxGroot Secure Connection",
     template: "%s | MaxGroot"
   },
-  description: "🔒 Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты приватности. Предотвратите перехват паролей, банковских реквизитов и другой конфиденциальной информации. Доступ к глобальному контенту Netflix, Amazon Prime Video, YouTube и других платформ.",
+  description: "🔒 Защита цифровой жизни с MaxGroot Secure Connection. Надёжное шифрование для защиты приватности. Предотвратите перехват паролей, банковских реквизитов и другой конфиденциальной информации. Доступ к глобальному контенту Netflix, Amazon Prime Video, YouTube и других платформ.",
   keywords: [
-    "Kaspersky Secure Connection",
+    "MaxGroot Secure Connection",
     "защита приватности",
     "шифрование",
     "защита данных",
@@ -52,8 +52,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ru_RU",
     url: "https://maxgroot.live",
-    title: "MaxGroot - Защита цифровой жизни с Kaspersky Secure Connection",
-    description: "🔒 Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации.",
+    title: "MaxGroot - Защита цифровой жизни с MaxGroot Secure Connection",
+    description: "🔒 Защита цифровой жизни с MaxGroot Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации.",
     siteName: "MaxGroot",
     images: [
       {
@@ -66,8 +66,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "MaxGroot - Защита цифровой жизни с Kaspersky Secure Connection",
-    description: "🔒 Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации.",
+    title: "MaxGroot - Защита цифровой жизни с MaxGroot Secure Connection",
+    description: "🔒 Защита цифровой жизни с MaxGroot Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации.",
     images: ["/logo-rounded.png"],
   },
   robots: {
@@ -116,7 +116,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               "name": "MaxGroot",
-              "description": "Защита цифровой жизни с Kaspersky Secure Connection",
+              "description": "Защита цифровой жизни с MaxGroot Secure Connection",
               "url": "https://maxgroot.live",
               "logo": "https://maxgroot.live/logo-rounded.png",
               "contactPoint": {

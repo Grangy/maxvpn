@@ -49,7 +49,7 @@ export default function Footer() {
               </div>
               
               <p className="text-gray-400 mb-6 leading-relaxed">
-                Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты 
+                Защита цифровой жизни с MaxGroot Secure Connection. Надёжное шифрование для защиты 
                 приватности и конфиденциальной информации. Доступ к глобальному контенту.
               </p>
 

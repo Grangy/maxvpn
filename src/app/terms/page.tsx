@@ -58,7 +58,7 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-bebas text-white mb-4">2. Описание сервиса</h2>
               <p className="text-gray-300 mb-4">
-                MaxGroot предоставляет сервис защиты цифровой жизни с Kaspersky Secure Connection. 
+                MaxGroot предоставляет сервис защиты цифровой жизни с MaxGroot Secure Connection. 
                 Наш сервис включает:
               </p>
               <ul className="list-disc list-inside text-gray-300 space-y-2 mb-4">

@@ -85,7 +85,7 @@ export default function Hero() {
             transition={isMobile ? { duration: 0.1 } : { duration: 0.8, delay: 0.6 }}
             className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4"
           >
-            с <span className="text-blue-400 font-bold bg-blue-400/10 px-2 py-1 rounded">Kaspersky Secure Connection</span>
+            с <span className="text-blue-400 font-bold bg-blue-400/10 px-2 py-1 rounded">MaxGroot Secure Connection</span>
           </motion.p>
           
           <motion.p 

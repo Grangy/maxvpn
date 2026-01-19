@@ -27,7 +27,7 @@ export default function Features() {
     {
       icon: Lock,
       title: 'Защита приватности',
-      description: 'Ваши данные защищены от слежки и перехвата с помощью Kaspersky Secure Connection',
+      description: 'Ваши данные защищены от слежки и перехвата с помощью MaxGroot Secure Connection',
       details: ['Защита паролей', 'Защита банковских данных', 'Конфиденциальность']
     },
     {
@@ -78,7 +78,7 @@ export default function Features() {
             Почему выбирают <span className="text-blue-400">MaxGroot</span>
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации
+            Защита цифровой жизни с MaxGroot Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации
           </p>
         </motion.div>
 
@@ -160,7 +160,7 @@ export default function Features() {
           <div className="flex flex-col lg:flex-row items-center justify-between">
             <div className="text-center lg:text-left mb-8 lg:mb-0">
               <h3 className="text-2xl font-bebas text-white mb-4">
-                Kaspersky <span className="text-purple-400">Secure Connection</span>
+                MaxGroot <span className="text-purple-400">Secure Connection</span>
               </h3>
               <p className="text-gray-300 mb-6 max-w-2xl">
                 Надёжное шифрование для защиты вашей цифровой жизни. Предотвратите перехват паролей, 

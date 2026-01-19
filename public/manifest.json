@@ -1,7 +1,7 @@
 {
   "name": "MaxGroot - Защита цифровой жизни",
   "short_name": "MaxGroot",
-  "description": "Защита цифровой жизни с Kaspersky Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации.",
+  "description": "Защита цифровой жизни с MaxGroot Secure Connection. Надёжное шифрование для защиты приватности и конфиденциальной информации.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
