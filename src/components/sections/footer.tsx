@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Shield, MessageCircle, ArrowUp } from 'lucide-react';
+import { MessageCircle, ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export default function Footer() {
