@@ -46,22 +46,6 @@ const nextConfig: NextConfig = {
     return config;
   },
   
-  // Redirects for trailing slash handling
-  async redirects() {
-    return [
-      {
-        source: '/payment/',
-        destination: '/payment',
-        permanent: true,
-      },
-      {
-        source: '/topup/',
-        destination: '/topup',
-        permanent: true,
-      },
-    ];
-  },
-  
   // Headers for better caching and security
   async headers() {
     return [
