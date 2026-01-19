@@ -117,7 +117,8 @@ function PaymentPageContent() {
       } else {
         if (data.error === 'INSUFFICIENT_BALANCE') {
           // Redirect to topup page
-          router.push(`/topup?telegramId=${telegramId}&amount=${plan.price}&planId=${plan.id}`);
+          const userId = telegramId || getOrCreateTempUserId();
+          router.push(`/topup?amount=${plan.price}&planId=${plan.id}${userId ? `&telegramId=${userId}` : ''}`);
         } else {
           setError(data.message || data.error || 'Ошибка при покупке подписки');
         }

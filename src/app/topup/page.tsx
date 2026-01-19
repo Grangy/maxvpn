@@ -6,11 +6,12 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2, AlertCircle, ExternalLink } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
+import { getOrCreateTempUserId, getTelegramUserId, isTelegramWebApp } from '@/lib/telegram';
 
 function TopupPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const telegramId = searchParams.get('telegramId');
+  const telegramIdParam = searchParams.get('telegramId');
   const amountParam = searchParams.get('amount');
   const planId = searchParams.get('planId');
   
@@ -19,14 +20,26 @@ function TopupPageContent() {
   const [error, setError] = useState<string | null>(null);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [telegramId, setTelegramId] = useState<string | null>(null);
 
   const presetAmounts = [100, 250, 500, 1000, 2500, 5000];
 
   useEffect(() => {
-    if (!telegramId) {
-      setError('Не указан ID пользователя');
+    // Get telegramId from Telegram WebApp or use temp ID
+    if (isTelegramWebApp()) {
+      const tgId = getTelegramUserId();
+      if (tgId) {
+        setTelegramId(tgId);
+      } else {
+        setTelegramId(getOrCreateTempUserId());
+      }
+    } else if (telegramIdParam) {
+      setTelegramId(telegramIdParam);
+    } else {
+      // Anonymous topup - use temp ID
+      setTelegramId(getOrCreateTempUserId());
     }
-  }, [telegramId]);
+  }, [telegramIdParam]);
 
   useEffect(() => {
     if (orderId && paymentUrl) {
@@ -40,7 +53,7 @@ function TopupPageContent() {
             clearInterval(interval);
             // Redirect to payment page if planId exists, otherwise to success
             if (planId) {
-              router.push(`/payment?plan=${planId}&telegramId=${telegramId}`);
+              router.push(`/payment?plan=${planId}`);
             } else {
               router.push(`/success?topup=true&amount=${data.data.amount}`);
             }
@@ -60,7 +73,14 @@ function TopupPageContent() {
   }, [orderId, paymentUrl, planId, telegramId, router]);
 
   const handleCreateTopup = async () => {
-    if (!telegramId || !amount) return;
+    if (!amount) return;
+    
+    // Ensure we have a telegramId (temp or real)
+    const userId = telegramId || getOrCreateTempUserId();
+    if (!userId) {
+      setError('Не удалось создать идентификатор пользователя');
+      return;
+    }
 
     setProcessing(true);
     setError(null);
@@ -72,7 +92,7 @@ function TopupPageContent() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          telegramId,
+          telegramId: userId,
           amount,
         }),
       });
@@ -93,29 +113,6 @@ function TopupPageContent() {
     }
   };
 
-  if (!telegramId) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700 max-w-md w-full text-center"
-        >
-          <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bebas text-white mb-4">Ошибка</h2>
-          <p className="text-gray-300 mb-6">Не указан ID пользователя</p>
-          <Button
-            onClick={() => router.push('/')}
-            variant="outline"
-            className="w-full"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Вернуться на главную
-          </Button>
-        </motion.div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 py-12 px-4">
@@ -183,6 +180,13 @@ function TopupPageContent() {
                   className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Или введите сумму"
                 />
+                {!telegramIdParam && (
+                  <div className="mt-4 p-3 bg-blue-600/10 border border-blue-600/20 rounded-lg">
+                    <p className="text-sm text-blue-300">
+                      💡 Вы можете пополнить баланс без Telegram. После оплаты вы сможете привязать аккаунт Telegram.
+                    </p>
+                  </div>
+                )}
               </div>
 
               {error && (
