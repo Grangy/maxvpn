@@ -200,7 +200,12 @@ export default function Pricing() {
                 }`}
                 variant={plan.popular ? 'primary' : 'outline'}
                 size="sm"
-                onClick={() => window.open('https://t.me/maxvpn_offbot', '_blank')}
+                onClick={() => {
+                  // This will be handled by parent component or redirect to payment page
+                  // For now, just scroll to contact or show message
+                  alert('Для покупки подписки необходимо указать ваш Telegram ID. Пожалуйста, свяжитесь с нами через форму обратной связи.');
+                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 <span className="text-sm sm:text-base">Выбрать план</span>
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />

@@ -62,10 +62,10 @@ export default function Navigation() {
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => window.open('https://t.me/maxvpn_offbot', '_blank')}
+              onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <Zap className="w-4 h-4 mr-2" />
-              Подключиться
+              Выбрать тариф
             </Button>
           </div>
 
@@ -103,12 +103,12 @@ export default function Navigation() {
                   size="sm"
                   className="w-full"
                   onClick={() => {
-                    window.open('https://t.me/maxvpn_offbot', '_blank');
+                    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
                     setIsOpen(false);
                   }}
                 >
                   <Zap className="w-4 h-4 mr-2" />
-                  Подключиться
+                  Выбрать тариф
                 </Button>
               </div>
             </div>

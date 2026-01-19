@@ -4,7 +4,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from './button';
 import { 
-  MessageCircle, 
   Zap, 
   CheckCircle, 
   ArrowRight
@@ -17,11 +16,6 @@ interface QuickConnectModalProps {
 }
 
 export default function QuickConnectModal({ isOpen, onClose }: QuickConnectModalProps) {
-  const handleTelegramRedirect = () => {
-    window.open('https://t.me/maxvpn_offbot', '_blank');
-    onClose();
-  };
-
   return (
     <ResponsiveModal isOpen={isOpen} onClose={onClose} title="Быстрое подключение" size="lg">
       <div className="space-y-4 sm:space-y-6">
@@ -34,21 +28,24 @@ export default function QuickConnectModal({ isOpen, onClose }: QuickConnectModal
             <Zap className="w-8 h-8 sm:w-10 sm:h-10 text-blue-400" />
           </div>
           <h3 className="text-xl sm:text-2xl font-bebas text-white mb-3 sm:mb-4">
-            Подключиться к MaxGroot
+            Выбрать тариф MaxGroot
           </h3>
           <p className="text-sm sm:text-base text-gray-300 mb-4 sm:mb-6 px-2">
-            Используйте Telegram бота для быстрой настройки и подключения к защищённому соединению.
+            Выберите подходящий тариф и начните использовать защищённое соединение.
           </p>
         </motion.div>
 
         <div className="space-y-3 sm:space-y-4">
           <Button
-            onClick={handleTelegramRedirect}
+            onClick={() => {
+              onClose();
+              document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+            }}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white text-base sm:text-lg py-3 sm:py-4"
             size="lg"
           >
-            <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" />
-            <span className="text-sm sm:text-base">Подключиться через Telegram бота</span>
+            <Zap className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" />
+            <span className="text-sm sm:text-base">Выбрать тариф</span>
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 sm:ml-3" />
           </Button>
         </div>

@@ -218,18 +218,11 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="text-lg font-semibold text-white mb-2">
-                      Telegram бот
+                      Свяжитесь с нами
                     </h4>
                     <p className="text-gray-300 mb-3">
-                      Быстрое подключение и настройка через нашего бота
+                      Заполните форму обратной связи, и мы свяжемся с вами в ближайшее время
                     </p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.open('https://t.me/maxvpn_offbot', '_blank')}
-                    >
-                      @maxvpn_offbot
-                    </Button>
                   </div>
                 </div>
 
@@ -239,17 +232,17 @@ export default function Contact() {
             {/* Quick Connect */}
             <div className="p-8 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-blue-600/10 rounded-2xl border border-blue-600/20 backdrop-blur-sm">
               <h4 className="text-xl font-bebas text-white mb-4">
-                Быстрое подключение
+                Выбрать тариф
               </h4>
               <p className="text-gray-300 mb-6">
-                Хотите подключиться прямо сейчас? Используйте нашего Telegram бота для мгновенной настройки.
+                Выберите подходящий тариф и начните использовать защищённое соединение.
               </p>
               <Button
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-blue-500/25 hover:scale-105 transition-all duration-300"
-                onClick={() => window.open('https://t.me/maxvpn_offbot', '_blank')}
+                onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
-                Подключиться через бота
+                Перейти к тарифам
               </Button>
             </div>
           </motion.div>

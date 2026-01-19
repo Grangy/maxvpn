@@ -51,7 +51,7 @@ export default function Features() {
     {
       icon: Clock,
       title: 'Быстрое подключение',
-      description: 'Подключение за минуту через Telegram бота',
+      description: 'Быстрое подключение и настройка',
       details: ['Автоматическая настройка', 'Мгновенная активация', '24/7 поддержка']
     }
   ];
