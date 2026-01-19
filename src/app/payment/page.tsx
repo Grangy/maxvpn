@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 import LoadingSpinner from '@/components/ui/loading-spinner';
+import { getOrCreateTempUserId, getTelegramUserId, isTelegramWebApp } from '@/lib/telegram';
 
 interface Plan {
   id: string;
@@ -20,16 +21,35 @@ function PaymentPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const planId = searchParams.get('plan');
-  const telegramId = searchParams.get('telegramId');
+  const telegramIdParam = searchParams.get('telegramId');
   
   const [plan, setPlan] = useState<Plan | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [telegramId, setTelegramId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!planId || !telegramId) {
-      setError('Не указан тариф или ID пользователя');
+    // Initialize Telegram WebApp if available
+    if (isTelegramWebApp()) {
+      const tgId = getTelegramUserId();
+      if (tgId) {
+        setTelegramId(tgId);
+      } else {
+        // If in Telegram but no user yet, use temp ID
+        setTelegramId(getOrCreateTempUserId());
+      }
+    } else if (telegramIdParam) {
+      setTelegramId(telegramIdParam);
+    } else {
+      // Anonymous purchase - use temp ID (will be created when needed)
+      // Don't set it yet, will be created in handleBuy
+    }
+  }, [telegramIdParam]);
+
+  useEffect(() => {
+    if (!planId) {
+      setError('Не указан тариф');
       setLoading(false);
       return;
     }
@@ -54,10 +74,17 @@ function PaymentPageContent() {
         setError('Ошибка загрузки тарифов');
       })
       .finally(() => setLoading(false));
-  }, [planId, telegramId]);
+  }, [planId]);
 
   const handleBuy = async () => {
-    if (!plan || !telegramId) return;
+    if (!plan) return;
+    
+    // Ensure we have a telegramId (temp or real)
+    const userId = telegramId || getOrCreateTempUserId();
+    if (!userId) {
+      setError('Не удалось создать идентификатор пользователя');
+      return;
+    }
 
     setProcessing(true);
     setError(null);
@@ -69,7 +96,7 @@ function PaymentPageContent() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          telegramId,
+          telegramId: userId,
           planId: plan.id,
         }),
       });
@@ -84,7 +111,8 @@ function PaymentPageContent() {
           `subscriptionUrl=${encodeURIComponent(subscription.subscriptionUrl)}&` +
           `subscriptionUrl2=${encodeURIComponent(subscription.subscriptionUrl2)}&` +
           `planName=${encodeURIComponent(subscription.planName)}&` +
-          `endDate=${encodeURIComponent(subscription.endDate)}`
+          `endDate=${encodeURIComponent(subscription.endDate)}&` +
+          `telegramId=${encodeURIComponent(telegramId || '')}`
         );
       } else {
         if (data.error === 'INSUFFICIENT_BALANCE') {
@@ -164,6 +192,13 @@ function PaymentPageContent() {
                 <div className="text-sm text-gray-400 mt-2">
                   Срок действия: {plan.duration} {plan.duration === 1 ? 'месяц' : plan.duration < 5 ? 'месяца' : 'месяцев'}
                 </div>
+                {!telegramId && (
+                  <div className="mt-4 p-3 bg-blue-600/10 border border-blue-600/20 rounded-lg">
+                    <p className="text-sm text-blue-300">
+                      💡 Вы можете купить подписку без Telegram. После оплаты вы сможете привязать аккаунт Telegram для удобного управления.
+                    </p>
+                  </div>
+                )}
               </div>
 
               {error && (

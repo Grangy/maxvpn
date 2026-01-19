@@ -149,6 +149,7 @@ export default function RootLayout({
         }} />
       </head>
       <body className={`${inter.variable} ${unbounded.variable} font-sans antialiased bg-slate-950 text-white`}>
+        <script src="https://telegram.org/js/telegram-web-app.js" async />
         {children}
       </body>
     </html>

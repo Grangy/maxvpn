@@ -14,6 +14,7 @@ export default function Pricing() {
   const plans = [
     {
       name: 'Базовый',
+      planId: 'M1',
       icon: Zap,
       price: { monthly: 100, annual: 1000 },
       description: 'Для личного использования',
@@ -30,6 +31,7 @@ export default function Pricing() {
     },
     {
       name: 'Продвинутый',
+      planId: 'M3',
       icon: Crown,
       price: { monthly: 250, annual: 2300 },
       description: 'Для активных пользователей',
@@ -46,6 +48,7 @@ export default function Pricing() {
     },
     {
       name: 'Максимальный',
+      planId: 'M6',
       icon: Star,
       price: { monthly: 350, annual: 3500 },
       description: 'Для максимальной производительности',
@@ -201,10 +204,8 @@ export default function Pricing() {
                 variant={plan.popular ? 'primary' : 'outline'}
                 size="sm"
                 onClick={() => {
-                  // This will be handled by parent component or redirect to payment page
-                  // For now, just scroll to contact or show message
-                  alert('Для покупки подписки необходимо указать ваш Telegram ID. Пожалуйста, свяжитесь с нами через форму обратной связи.');
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                  // Redirect to payment page - no telegramId required
+                  window.location.href = `/payment?plan=${plan.planId}`;
                 }}
               >
                 <span className="text-sm sm:text-base">Выбрать план</span>

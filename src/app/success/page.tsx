@@ -1,19 +1,89 @@
 'use client';
 
-import React, { Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { Suspense, useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, MessageCircle, Home, Copy, ExternalLink } from 'lucide-react';
+import { CheckCircle, ArrowRight, MessageCircle, Home, Copy, ExternalLink, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { isTelegramWebApp, getTelegramUser, initTelegramWebApp, getStoredPurchaseData, clearStoredPurchaseData } from '@/lib/telegram';
 
 function SuccessPageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const subscriptionUrl = searchParams.get('subscriptionUrl');
   const subscriptionUrl2 = searchParams.get('subscriptionUrl2');
   const planName = searchParams.get('planName');
   const endDate = searchParams.get('endDate');
   const topup = searchParams.get('topup');
   const amount = searchParams.get('amount');
+  
+  const [isTelegram, setIsTelegram] = useState(false);
+  const [telegramUser, setTelegramUser] = useState<{ telegramId: string; username?: string; firstName?: string } | null>(null);
+  const [linking, setLinking] = useState(false);
+  const [linked, setLinked] = useState(false);
+  
+  useEffect(() => {
+    // Initialize Telegram WebApp if available
+    if (isTelegramWebApp()) {
+      setIsTelegram(true);
+      initTelegramWebApp();
+      const user = getTelegramUser();
+      if (user && user.id) {
+        setTelegramUser({
+          telegramId: String(user.id),
+          username: user.username,
+          firstName: user.first_name,
+        });
+        setLinked(true);
+      }
+    }
+    
+    // Check for stored purchase data
+    const stored = getStoredPurchaseData();
+    if (stored && !subscriptionUrl) {
+      // Redirect with stored data
+      const params = new URLSearchParams();
+      if (stored.subscriptionUrl) params.set('subscriptionUrl', stored.subscriptionUrl);
+      if (stored.subscriptionUrl2) params.set('subscriptionUrl2', stored.subscriptionUrl2);
+      if (stored.planName) params.set('planName', stored.planName);
+      if (stored.endDate) params.set('endDate', stored.endDate);
+      router.replace(`/success?${params.toString()}`);
+    }
+  }, [router, subscriptionUrl]);
+  
+  const handleTelegramAuth = async () => {
+    if (!isTelegramWebApp() || !window.Telegram?.WebApp.initData) {
+      // Open Telegram bot
+      window.open('https://t.me/maxvpn_offbot', '_blank');
+      return;
+    }
+    
+    setLinking(true);
+    try {
+      const response = await fetch('/api/auth/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          initData: window.Telegram.WebApp.initData,
+        }),
+      });
+      
+      const data = await response.json();
+      if (data.ok && data.data) {
+        setTelegramUser({
+          telegramId: data.data.telegramId,
+          username: data.data.username,
+          firstName: data.data.firstName,
+        });
+        setLinked(true);
+        clearStoredPurchaseData();
+      }
+    } catch (error) {
+      console.error('Error linking Telegram:', error);
+    } finally {
+      setLinking(false);
+    }
+  };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -157,6 +227,46 @@ function SuccessPageContent() {
                   💡 <strong>Совет:</strong> Используйте кнопку с иконкой внешней ссылки для автоматического открытия в приложении Happ
                 </p>
               </div>
+            </motion.div>
+          )}
+
+          {/* Telegram Link Section - Show if not linked */}
+          {!linked && subscriptionUrl && !topup && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-xl p-6 mb-8 border border-blue-600/30"
+            >
+              <h3 className="text-xl font-bebas text-white mb-4">
+                🔗 Привяжите аккаунт Telegram
+              </h3>
+              <p className="text-gray-300 mb-4">
+                Для удобного управления подпиской и получения обновлений привяжите ваш Telegram аккаунт
+              </p>
+              <Button
+                onClick={handleTelegramAuth}
+                disabled={linking}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                size="lg"
+              >
+                {linking ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Привязка...
+                  </>
+                ) : isTelegram ? (
+                  <>
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    Привязать аккаунт
+                  </>
+                ) : (
+                  <>
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    Открыть бота @maxvpn_offbot
+                  </>
+                )}
+              </Button>
             </motion.div>
           )}
 
