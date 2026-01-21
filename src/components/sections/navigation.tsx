@@ -62,7 +62,14 @@ export default function Navigation() {
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => {
+                const pricingElement = document.getElementById('pricing');
+                if (pricingElement) {
+                  pricingElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                  window.location.href = '#pricing';
+                }
+              }}
             >
               <Zap className="w-4 h-4 mr-2" />
               Выбрать тариф
@@ -103,8 +110,15 @@ export default function Navigation() {
                   size="sm"
                   className="w-full"
                   onClick={() => {
-                    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
                     setIsOpen(false);
+                    setTimeout(() => {
+                      const pricingElement = document.getElementById('pricing');
+                      if (pricingElement) {
+                        pricingElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      } else {
+                        window.location.href = '#pricing';
+                      }
+                    }, 100);
                   }}
                 >
                   <Zap className="w-4 h-4 mr-2" />

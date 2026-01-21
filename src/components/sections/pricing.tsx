@@ -1,75 +1,95 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Check, Zap, Crown, Star, ArrowRight } from 'lucide-react';
+import { Check, Zap, Crown, Star, ArrowRight, Loader2 } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 import { useMobile } from '@/lib/hooks/use-mobile';
+import { getPlans, type Plan } from '@/lib/api-client';
+
+// Маппинг planId на иконки и названия
+const planIcons: Record<string, typeof Zap> = {
+  'M1': Zap,
+  'M3': Crown,
+  'M6': Star,
+};
+
+const planNames: Record<string, string> = {
+  'M1': 'Базовый',
+  'M3': 'Продвинутый',
+  'M6': 'Максимальный',
+};
+
+const planDescriptions: Record<string, string> = {
+  'M1': 'Для личного использования',
+  'M3': 'Для активных пользователей',
+  'M6': 'Для максимальной производительности',
+};
+
+const defaultFeatures = [
+  'Надёжное шифрование',
+  'Все серверы',
+  'Защита паролей и данных',
+  'Доступ к глобальному контенту',
+];
 
 export default function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false);
+  const [apiPlans, setApiPlans] = useState<Plan[]>([]);
+  const [loading, setLoading] = useState(true);
   const isMobile = useMobile();
 
-  const plans = [
-    {
-      name: 'Базовый',
-      planId: 'M1',
-      icon: Zap,
-      price: { monthly: 100, annual: 1000 },
-      description: 'Для личного использования',
-      features: [
-        'Надёжное шифрование',
-        '3 устройства',
-        'Все серверы',
-        'Базовая поддержка',
-        'Защита паролей и данных',
-        'Доступ к глобальному контенту'
-      ],
-      popular: false,
-      color: 'border-gray-600'
-    },
-    {
-      name: 'Продвинутый',
-      planId: 'M3',
-      icon: Crown,
-      price: { monthly: 250, annual: 2300 },
-      description: 'Для активных пользователей',
-      features: [
-        'Надёжное шифрование',
-        '5 устройств',
-        'Все серверы',
-        'Базовая поддержка',
-        'Защита паролей и данных',
-        'Доступ к глобальному контенту'
-      ],
-      popular: true,
-      color: 'border-blue-600'
-    },
-    {
-      name: 'Максимальный',
-      planId: 'M6',
-      icon: Star,
-      price: { monthly: 350, annual: 3500 },
-      description: 'Для максимальной производительности',
-      features: [
-        'Максимальное шифрование',
-        '10 устройств',
-        'Все серверы',
-        'Приоритетная поддержка',
-        'Защита паролей и данных',
-        'Доступ к глобальному контенту'
-      ],
-      popular: false,
-      color: 'border-yellow-600'
-    }
-  ];
+  useEffect(() => {
+    loadPlans();
+  }, []);
 
-  const savings = [
-    { plan: 'Базовый', monthly: 100, annual: 1000, save: 200 },
-    { plan: 'Продвинутый', monthly: 250, annual: 2300, save: 700 },
-    { plan: 'Максимальный', monthly: 350, annual: 3500, save: 700 }
-  ];
+  const loadPlans = async () => {
+    try {
+      const response = await getPlans();
+      if (response.ok && response.data) {
+        setApiPlans(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading plans:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Преобразуем API планы в формат для отображения
+  const plans = apiPlans.map((apiPlan) => {
+    const Icon = planIcons[apiPlan.id] || Zap;
+    const name = planNames[apiPlan.id] || apiPlan.label || apiPlan.name || apiPlan.id;
+    const description = planDescriptions[apiPlan.id] || apiPlan.description || '';
+    const months = apiPlan.months || 1;
+    const pricePerMonth = apiPlan.pricePerMonth || apiPlan.price;
+    const totalPrice = apiPlan.price;
+    
+    // Вычисляем годовую цену (если месячный план, умножаем на 12 с скидкой 20%)
+    const annualPrice = months === 1 ? Math.round(pricePerMonth * 12 * 0.8) : totalPrice * 2;
+
+    return {
+      name,
+      planId: apiPlan.id,
+      icon: Icon,
+      price: { 
+        monthly: pricePerMonth, 
+        annual: annualPrice 
+      },
+      description,
+      features: defaultFeatures,
+      popular: apiPlan.id === 'M3', // M3 - популярный
+      color: apiPlan.id === 'M3' ? 'border-blue-600' : apiPlan.id === 'M6' ? 'border-yellow-600' : 'border-gray-600'
+    };
+  });
+
+  const savings = plans.map(plan => ({
+    plan: plan.name,
+    monthly: plan.price.monthly,
+    annual: plan.price.annual,
+    save: plan.price.monthly * 12 - plan.price.annual
+  }));
 
   return (
     <section id="pricing" className="py-20 bg-slate-950">
@@ -131,8 +151,17 @@ export default function Pricing() {
         </motion.div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-2 sm:px-0">
-          {plans.map((plan, index) => (
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
+          </div>
+        ) : plans.length === 0 ? (
+          <div className="text-center py-20 text-gray-400">
+            Тарифы временно недоступны
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-2 sm:px-0">
+            {plans.map((plan, index) => (
             <motion.div
               key={plan.name}
               initial={isMobile ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 20, scale: 0.95 }}
@@ -213,7 +242,8 @@ export default function Pricing() {
               </Button>
             </motion.div>
           ))}
-        </div>
+          </div>
+        )}
 
         {/* Savings Calculator */}
         <motion.div

@@ -4,13 +4,19 @@ import { buySubscription } from '@/lib/api';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { telegramId, planId } = body;
+    let { telegramId, planId } = body;
 
-    if (!telegramId || !planId) {
+    if (!planId) {
       return NextResponse.json(
-        { ok: false, error: 'telegramId and planId are required' },
+        { ok: false, error: 'planId is required' },
         { status: 400 }
       );
+    }
+
+    // Если telegramId не указан, используем дефолтный
+    if (!telegramId) {
+      telegramId = '683203214';
+      console.log('⚠️ telegramId not provided, using default:', telegramId);
     }
 
     const result = await buySubscription(telegramId, planId);

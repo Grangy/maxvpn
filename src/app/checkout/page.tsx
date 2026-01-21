@@ -31,13 +31,14 @@ function CheckoutPageContent() {
       if (tgId) {
         setTelegramId(tgId);
       } else {
-        setTelegramId(getOrCreateTempUserId());
+        // Дефолтный telegramId если пользователь не найден
+        setTelegramId('683203214');
       }
     } else if (telegramIdParam) {
       setTelegramId(telegramIdParam);
     } else {
-      // Анонимная покупка - создадим temp ID при необходимости
-      setTelegramId(null);
+      // Дефолтный telegramId для анонимных пользователей
+      setTelegramId('683203214');
     }
   }, [telegramIdParam]);
 
@@ -107,12 +108,8 @@ function CheckoutPageContent() {
       return;
     }
 
-    // Убеждаемся, что у нас есть telegramId
-    const userId = telegramId || getOrCreateTempUserId();
-    if (!userId) {
-      setError('Не удалось создать идентификатор пользователя');
-      return;
-    }
+    // Убеждаемся, что у нас есть telegramId (используем дефолтный если нет)
+    const userId = telegramId || '683203214';
 
     setProcessing(true);
     setError(null);

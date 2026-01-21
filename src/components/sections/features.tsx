@@ -123,7 +123,7 @@ export default function Features() {
               viewport={{ once: true }}
               className="group p-8 glass-card rounded-2xl hover:border-blue-600/50 hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300 hover:scale-105"
             >
-              <div className="flex items-center mb-6">
+              <div className="flex items-center justify-center mb-6">
                 <div className="p-3 bg-blue-600/20 rounded-xl border border-blue-600/30 group-hover:bg-blue-600/30 transition-colors duration-300">
                   <feature.icon className="w-8 h-8 text-blue-400" />
                 </div>
