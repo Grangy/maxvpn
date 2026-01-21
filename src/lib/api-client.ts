@@ -52,6 +52,8 @@ async function apiRequest<T>(
     try {
       console.log(`[API Client] ${options.method || 'GET'} ${url} (попытка ${attempt}/${retries})`);
       
+      // ВАЖНО: На клиенте ВСЕГДА используем относительный путь
+      // Это гарантирует, что запрос идет через Next.js API route, а не напрямую к внешнему API
       const response = await fetch(url, {
         ...options,
         headers: {
