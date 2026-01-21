@@ -60,7 +60,7 @@ function SuccessPageContent() {
     
     setLinking(true);
     try {
-      const response = await fetch('/api/auth/telegram', {
+      const response = await fetch('/apis/auth/telegram', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
