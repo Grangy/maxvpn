@@ -204,8 +204,8 @@ export default function Pricing() {
                 variant={plan.popular ? 'primary' : 'outline'}
                 size="sm"
                 onClick={() => {
-                  // Redirect to payment page - no telegramId required
-                  window.location.href = `/payment?plan=${plan.planId}`;
+                  // Redirect to checkout page - no telegramId required
+                  window.location.href = `/checkout?plan=${plan.planId}`;
                 }}
               >
                 <span className="text-sm sm:text-base">Выбрать план</span>

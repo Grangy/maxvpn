@@ -53,7 +53,7 @@ function TopupPageContent() {
             clearInterval(interval);
             // Redirect to payment page if planId exists, otherwise to success
             if (planId) {
-              router.push(`/payment?plan=${planId}`);
+              router.push(`/checkout?plan=${planId}`);
             } else {
               router.push(`/success?topup=true&amount=${data.data.amount}`);
             }
