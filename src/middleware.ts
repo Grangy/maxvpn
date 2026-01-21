@@ -2,13 +2,14 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
 
   // Remove trailing slash except for root
   if (pathname !== '/' && pathname.endsWith('/')) {
     const url = request.nextUrl.clone();
     url.pathname = pathname.slice(0, -1);
     // Preserve query parameters
+    url.search = search;
     return NextResponse.redirect(url, 308);
   }
 

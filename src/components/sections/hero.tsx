@@ -133,7 +133,7 @@ export default function Hero() {
             <Button
               size="lg"
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-2xl hover:shadow-blue-500/25 hover:scale-105 transition-all duration-300 w-full sm:w-auto hover-lift hover-glow border border-blue-500/30"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <AnimatedIcon 
                 icon={Zap} 
