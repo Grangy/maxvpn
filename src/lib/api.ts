@@ -6,7 +6,8 @@ const API_URL = process.env.API_URL || 'https://grangy.ru/api';
 const API_SECRET = process.env.API_SECRET || '';
 
 if (!API_SECRET) {
-  console.warn('⚠️ API_SECRET is not set in environment variables');
+  console.error('⚠️ API_SECRET is not set in environment variables');
+  console.error('Please ensure API_SECRET is set in .env.local on the server');
 }
 
 /**
@@ -14,7 +15,9 @@ if (!API_SECRET) {
  */
 export function getApiSecret(): string {
   if (!API_SECRET) {
-    throw new Error('API_SECRET is not configured');
+    const error = 'API_SECRET is not configured. Please set API_SECRET in .env.local on the server.';
+    console.error(error);
+    throw new Error(error);
   }
   return API_SECRET;
 }
@@ -39,8 +42,27 @@ export async function apiRequest<T>(
   });
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-    throw new Error(error.error || `API request failed: ${response.statusText}`);
+    let errorData;
+    try {
+      errorData = await response.json();
+    } catch {
+      errorData = { error: `API request failed: ${response.status} ${response.statusText}` };
+    }
+    
+    const errorMessage = errorData.error || errorData.message || `API request failed: ${response.status} ${response.statusText}`;
+    
+    // Log more details for debugging
+    if (response.status === 401) {
+      console.error('API Authentication Error (401):');
+      console.error('- Endpoint:', url);
+      console.error('- API_SECRET configured:', !!API_SECRET);
+      console.error('- API_SECRET length:', API_SECRET?.length || 0);
+      console.error('- Response:', errorMessage);
+    }
+    
+    const error = new Error(errorMessage);
+    (error as Error & { status?: number }).status = response.status;
+    throw error;
   }
 
   return response.json();

@@ -56,9 +56,20 @@ function PaymentPageContent() {
 
     // Load plans
     fetch('/api/plans')
-      .then(res => res.json())
-      .then(data => {
-        if (data.ok) {
+      .then(async res => {
+        const data = await res.json();
+        if (!res.ok) {
+          // Handle specific error cases
+          if (res.status === 401) {
+            setError('Ошибка авторизации API. Обратитесь к администратору.');
+            console.error('API Error (401):', data.error);
+          } else {
+            setError(data.error || 'Ошибка загрузки тарифов');
+          }
+          return;
+        }
+        
+        if (data.ok && data.data) {
           const selectedPlan = data.data.find((p: Plan) => p.id === planId);
           if (selectedPlan) {
             setPlan(selectedPlan);
@@ -71,7 +82,7 @@ function PaymentPageContent() {
       })
       .catch((err: unknown) => {
         console.error('Error loading plans:', err);
-        setError('Ошибка загрузки тарифов');
+        setError('Ошибка загрузки тарифов. Проверьте подключение к серверу.');
       })
       .finally(() => setLoading(false));
   }, [planId]);
