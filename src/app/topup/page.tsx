@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Loader2, AlertCircle, ExternalLink } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 import { getOrCreateTempUserId, getTelegramUserId, isTelegramWebApp } from '@/lib/telegram';
+import { createTopup, checkTopupStatus } from '@/lib/api-client';
 
 function TopupPageContent() {
   const searchParams = useSearchParams();
@@ -46,22 +47,23 @@ function TopupPageContent() {
       // Start polling for payment status
       const interval = setInterval(async () => {
         try {
-          const response = await fetch(`/api/topup/${orderId}/status`);
-          const data = await response.json();
+          const response = await checkTopupStatus(orderId);
           
-          if (data.ok && data.data.status === 'completed') {
-            clearInterval(interval);
-            // Redirect to payment page if planId exists, otherwise to success
-            if (planId) {
-              router.push(`/checkout?plan=${planId}`);
-            } else {
-              router.push(`/success?topup=true&amount=${data.data.amount}`);
+          if (response.ok && response.data) {
+            if (response.data.status === 'completed') {
+              clearInterval(interval);
+              // Redirect to checkout page if planId exists, otherwise to success
+              if (planId) {
+                router.push(`/checkout?plan=${planId}${telegramId ? `&telegramId=${telegramId}` : ''}`);
+              } else {
+                router.push(`/success?topup=true&amount=${response.data.amount}`);
+              }
+            } else if (response.data.status === 'failed') {
+              clearInterval(interval);
+              setError('Оплата не прошла. Попробуйте снова.');
+              setPaymentUrl(null);
+              setOrderId(null);
             }
-          } else if (data.ok && data.data.status === 'failed') {
-            clearInterval(interval);
-            setError('Оплата не прошла. Попробуйте снова.');
-            setPaymentUrl(null);
-            setOrderId(null);
           }
         } catch (err) {
           console.error('Error checking payment status:', err);
@@ -73,7 +75,10 @@ function TopupPageContent() {
   }, [orderId, paymentUrl, planId, telegramId, router]);
 
   const handleCreateTopup = async () => {
-    if (!amount) return;
+    if (!amount || amount < 1) {
+      setError('Укажите сумму пополнения');
+      return;
+    }
     
     // Ensure we have a telegramId (temp or real)
     const userId = telegramId || getOrCreateTempUserId();
@@ -86,28 +91,17 @@ function TopupPageContent() {
     setError(null);
 
     try {
-      const response = await fetch('/api/topup/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          telegramId: userId,
-          amount,
-        }),
-      });
+      const response = await createTopup(userId, amount);
 
-      const data = await response.json();
-
-      if (data.ok && data.data.paymentUrl) {
-        setPaymentUrl(data.data.paymentUrl);
-        setOrderId(data.data.orderId);
+      if (response.ok && response.data) {
+        setPaymentUrl(response.data.paymentUrl);
+        setOrderId(response.data.orderId);
       } else {
-        setError(data.error || 'Ошибка при создании заказа');
+        setError(response.message || response.error || 'Ошибка при создании заказа');
       }
-      } catch (err: unknown) {
+    } catch (err: unknown) {
       console.error('Error creating topup:', err);
-      setError('Ошибка при создании заказа. Попробуйте позже.');
+      setError('Ошибка при создании заказа. Проверьте подключение к интернету.');
     } finally {
       setProcessing(false);
     }
