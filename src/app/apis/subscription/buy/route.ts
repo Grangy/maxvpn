@@ -4,7 +4,8 @@ import { buySubscription } from '@/lib/api';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    let { telegramId, planId } = body;
+    const { planId } = body;
+    let { telegramId } = body;
 
     if (!planId) {
       return NextResponse.json(
