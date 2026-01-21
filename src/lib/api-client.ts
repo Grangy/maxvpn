@@ -34,19 +34,37 @@ async function apiRequest<T>(
   options: RequestInit = {},
   retries = 3
 ): Promise<ApiResponse<T>> {
+  // ВАЖНО: Всегда используем относительный путь через Next.js API routes
+  // Это гарантирует, что запросы идут через сервер, а не напрямую к внешнему API
   const url = `${API_BASE}${endpoint}`;
+  
+  // Проверка, что мы не используем абсолютный URL (защита от ошибок)
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    console.error('❌ ОШИБКА: Используется абсолютный URL вместо относительного!', url);
+    return {
+      ok: false,
+      error: 'CONFIGURATION_ERROR',
+      message: 'Неправильная конфигурация API клиента',
+    };
+  }
   
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
+      console.log(`[API Client] ${options.method || 'GET'} ${url} (попытка ${attempt}/${retries})`);
+      
       const response = await fetch(url, {
         ...options,
         headers: {
           'Content-Type': 'application/json',
           ...options.headers,
         },
+        // Важно: не кэшируем запросы к API
+        cache: 'no-store',
       });
 
       const data = await response.json();
+      
+      console.log(`[API Client] Ответ:`, { status: response.status, ok: response.ok, hasData: !!data });
 
       // Если успешный ответ
       if (response.ok && data.ok !== false) {
