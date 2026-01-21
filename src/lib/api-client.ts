@@ -3,7 +3,7 @@
  * Все запросы идут через Next.js API routes (безопасно)
  */
 
-const API_BASE = '/api';
+const API_BASE = '/apis';
 
 /**
  * Типы для API ответов
