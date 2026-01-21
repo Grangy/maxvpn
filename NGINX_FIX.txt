@@ -1,0 +1,53 @@
+КРИТИЧЕСКАЯ ПРОБЛЕМА: Nginx проксирует /api/ на порт 4000!
+
+ПРОБЛЕМА:
+В браузере видно: GET https://grangy.ru/api/plans 401
+
+Это означает, что Nginx проксирует /api/ на порт 4000 (внешний API), 
+а не на порт 3000 (Next.js)!
+
+РЕШЕНИЕ:
+
+1. Проверьте Nginx конфигурацию на сервере:
+
+ssh root@grangy.ru
+sudo cat /etc/nginx/sites-enabled/grangy.ru.conf | grep -A 10 "location /api"
+
+Сейчас там, скорее всего:
+location /api/ {
+    proxy_pass http://127.0.0.1:4000;  # НЕПРАВИЛЬНО!
+    ...
+}
+
+Должно быть:
+location /api/ {
+    proxy_pass http://127.0.0.1:3000;  # ПРАВИЛЬНО!
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+}
+
+2. Исправление:
+
+sudo nano /etc/nginx/sites-enabled/grangy.ru.conf
+
+Найдите блок location /api/ и замените proxy_pass на порт 3000.
+
+3. Проверьте и перезагрузите:
+
+sudo nginx -t
+sudo systemctl reload nginx
+
+4. Проверка:
+
+curl https://grangy.ru/api/plans
+
+Должен вернуть JSON от Next.js API route, а не 401!
+
+ВАЖНО:
+- /api/ должен идти на порт 3000 (Next.js)
+- /admin/broadcast/ и /payment/ могут идти на порт 4000 (внешний API)
+- Но /api/ - это Next.js API routes, они должны идти на порт 3000!
