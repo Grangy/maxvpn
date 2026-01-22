@@ -8,12 +8,14 @@ import { Button } from '@/components/ui/button';
 import { isTelegramWebApp, getTelegramUser, initTelegramWebApp, getStoredPurchaseData, clearStoredPurchaseData } from '@/lib/telegram';
 
 function SuccessPageContent() {
+  
   const searchParams = useSearchParams();
   const router = useRouter();
   const subscriptionUrl = searchParams.get('subscriptionUrl');
   const subscriptionUrl2 = searchParams.get('subscriptionUrl2');
   const planName = searchParams.get('planName');
   const endDate = searchParams.get('endDate');
+  const telegramId = searchParams.get('telegramId');
   const topup = searchParams.get('topup');
   const amount = searchParams.get('amount');
   
@@ -21,6 +23,7 @@ function SuccessPageContent() {
   const [telegramUser, setTelegramUser] = useState<{ telegramId: string; username?: string; firstName?: string } | null>(null);
   const [linking, setLinking] = useState(false);
   const [linked, setLinked] = useState(false);
+  const [botAuthSent, setBotAuthSent] = useState(false);
   
   useEffect(() => {
     // Initialize Telegram WebApp if available
@@ -47,9 +50,40 @@ function SuccessPageContent() {
       if (stored.subscriptionUrl2) params.set('subscriptionUrl2', stored.subscriptionUrl2);
       if (stored.planName) params.set('planName', stored.planName);
       if (stored.endDate) params.set('endDate', stored.endDate);
+      if (stored.telegramId) params.set('telegramId', stored.telegramId);
       router.replace(`/success?${params.toString()}`);
     }
-  }, [router, subscriptionUrl]);
+
+    // Автоматически авторизуем в боте после успешной покупки
+    if (telegramId && subscriptionUrl && !botAuthSent && !topup) {
+      authorizeInBot();
+    }
+  }, [router, subscriptionUrl, telegramId, botAuthSent, topup]);
+
+  const authorizeInBot = async () => {
+    if (!telegramId || botAuthSent) return;
+    
+    setBotAuthSent(true);
+    try {
+      const response = await fetch('/apis/bot/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          telegramId,
+          planName,
+          subscriptionId: subscriptionUrl?.split('/').pop(), // Извлекаем ID из URL
+        }),
+      });
+
+      const data = await response.json();
+      if (data.ok) {
+        console.log('User authorized in bot successfully');
+      }
+    } catch (error) {
+      console.error('Error authorizing in bot:', error);
+      // Не критично, продолжаем
+    }
+  };
   
   const handleTelegramAuth = async () => {
     if (!isTelegramWebApp() || !window.Telegram?.WebApp.initData) {
@@ -230,42 +264,29 @@ function SuccessPageContent() {
             </motion.div>
           )}
 
-          {/* Telegram Link Section - Show if not linked */}
-          {!linked && subscriptionUrl && !topup && (
+          {/* Bot Authorization Status */}
+          {telegramId && subscriptionUrl && !topup && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-xl p-6 mb-8 border border-blue-600/30"
+              className="bg-gradient-to-br from-green-600/20 to-emerald-600/20 rounded-xl p-6 mb-8 border border-green-600/30"
             >
-              <h3 className="text-xl font-bebas text-white mb-4">
-                🔗 Привяжите аккаунт Telegram
+              <h3 className="text-xl font-bebas text-white mb-4 flex items-center gap-2">
+                <CheckCircle className="w-6 h-6 text-green-400" />
+                Авторизация в боте выполнена
               </h3>
               <p className="text-gray-300 mb-4">
-                Для удобного управления подпиской и получения обновлений привяжите ваш Telegram аккаунт
+                Ваш аккаунт успешно авторизован в боте @maxvpn_offbot. Вы можете управлять подпиской прямо из бота.
               </p>
               <Button
-                onClick={handleTelegramAuth}
-                disabled={linking}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={() => window.open('https://t.me/maxvpn_offbot', '_blank')}
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
                 size="lg"
               >
-                {linking ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Привязка...
-                  </>
-                ) : isTelegram ? (
-                  <>
-                    <MessageCircle className="w-5 h-5 mr-2" />
-                    Привязать аккаунт
-                  </>
-                ) : (
-                  <>
-                    <MessageCircle className="w-5 h-5 mr-2" />
-                    Открыть бота @maxvpn_offbot
-                  </>
-                )}
+                <MessageCircle className="w-5 h-5 mr-2" />
+                Открыть бота @maxvpn_offbot
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </motion.div>
           )}

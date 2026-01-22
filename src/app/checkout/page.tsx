@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Loader2, AlertCircle, CheckCircle2, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertCircle, CheckCircle2, RefreshCw, User } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 import LoadingSpinner from '@/components/ui/loading-spinner';
-import { getOrCreateTempUserId, getTelegramUserId, isTelegramWebApp } from '@/lib/telegram';
+import TelegramAuthModal from '@/components/ui/telegram-auth-modal';
+import { getTelegramUserId, isTelegramWebApp } from '@/lib/telegram';
 import { getPlans, buySubscription, type Plan } from '@/lib/api-client';
 
 function CheckoutPageContent() {
@@ -22,38 +23,66 @@ function CheckoutPageContent() {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [telegramId, setTelegramId] = useState<string | null>(null);
+  const [telegramUser, setTelegramUser] = useState<{
+    username?: string;
+    firstName?: string;
+    lastName?: string;
+  } | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
 
   // Инициализация Telegram ID
   useEffect(() => {
-    if (isTelegramWebApp()) {
-      const tgId = getTelegramUserId();
-      if (tgId) {
-        setTelegramId(tgId);
+    const checkAuth = async () => {
+      if (isTelegramWebApp()) {
+        const tgId = getTelegramUserId();
+        if (tgId) {
+          setTelegramId(tgId);
+          // Пытаемся получить данные пользователя
+          try {
+            if (window.Telegram?.WebApp.initData) {
+              const response = await fetch('/apis/auth/telegram', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  initData: window.Telegram.WebApp.initData,
+                }),
+              });
+              const data = await response.json();
+              if (data.ok && data.data) {
+                setTelegramUser({
+                  username: data.data.username,
+                  firstName: data.data.firstName,
+                  lastName: data.data.lastName,
+                });
+              }
+            }
+          } catch (err) {
+            console.error('Error getting user data:', err);
+          }
+        } else {
+          // Нет авторизации - показываем модальное окно
+          setShowAuthModal(true);
+        }
+      } else if (telegramIdParam) {
+        setTelegramId(telegramIdParam);
       } else {
-        // Дефолтный telegramId если пользователь не найден
-        setTelegramId('683203214');
+        // Нет авторизации - показываем модальное окно
+        setShowAuthModal(true);
       }
-    } else if (telegramIdParam) {
-      setTelegramId(telegramIdParam);
-    } else {
-      // Дефолтный telegramId для анонимных пользователей
-      setTelegramId('683203214');
-    }
+    };
+
+    checkAuth();
   }, [telegramIdParam]);
 
   // Загрузка тарифов
-  useEffect(() => {
+  const loadPlans = useCallback(async () => {
     if (!planId) {
       setError('Не указан тариф');
       setLoading(false);
       return;
     }
 
-    loadPlans();
-  }, [planId]);
-
-  const loadPlans = async () => {
     setLoading(true);
     setError(null);
     setRetryCount(0);
@@ -95,11 +124,25 @@ function CheckoutPageContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [planId]);
+
+  useEffect(() => {
+    loadPlans();
+  }, [loadPlans]);
 
   const handleRetry = () => {
     setRetryCount(prev => prev + 1);
     loadPlans();
+  };
+
+  const handleAuthSuccess = (tgId: string, userData: {
+    username?: string;
+    firstName?: string;
+    lastName?: string;
+  }) => {
+    setTelegramId(tgId);
+    setTelegramUser(userData);
+    setShowAuthModal(false);
   };
 
   const handleBuy = async () => {
@@ -108,20 +151,24 @@ function CheckoutPageContent() {
       return;
     }
 
-    // Убеждаемся, что у нас есть telegramId (используем дефолтный если нет)
-    const userId = telegramId || '683203214';
+    // Проверяем авторизацию
+    if (!telegramId) {
+      setShowAuthModal(true);
+      setError('Необходима авторизация через Telegram');
+      return;
+    }
 
     setProcessing(true);
     setError(null);
 
     try {
-      const response = await buySubscription(userId, plan.id);
+      const response = await buySubscription(telegramId, plan.id);
 
       if (!response.ok) {
         // Обработка специфичных ошибок
         if (response.error === 'INSUFFICIENT_BALANCE') {
           // Редирект на пополнение
-          router.push(`/topup?amount=${plan.price}&planId=${plan.id}${userId ? `&telegramId=${userId}` : ''}`);
+          router.push(`/topup?amount=${plan.price}&planId=${plan.id}&telegramId=${telegramId}`);
           return;
         } else if (response.error === 'INVALID_PLAN') {
           setError('Неверный тарифный план. Пожалуйста, выберите другой тариф.');
@@ -146,7 +193,7 @@ function CheckoutPageContent() {
         `subscriptionUrl2=${encodeURIComponent(subscription.subscriptionUrl2)}&` +
         `planName=${encodeURIComponent(subscription.planName)}&` +
         `endDate=${encodeURIComponent(subscription.endDate)}&` +
-        `telegramId=${encodeURIComponent(userId)}`
+        `telegramId=${encodeURIComponent(telegramId)}`
       );
     } catch (err) {
       console.error('Error buying subscription:', err);
@@ -205,26 +252,104 @@ function CheckoutPageContent() {
 
   // Основной контент
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        {/* Кнопка назад */}
-        <Button
-          onClick={() => router.push('/')}
-          variant="outline"
-          className="mb-6"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Назад
-        </Button>
+    <React.Fragment>
+      <TelegramAuthModal
+        isOpen={showAuthModal}
+        onClose={() => {
+          if (!telegramId) {
+            // Если нет авторизации, редиректим на главную
+            router.push('/');
+          } else {
+            setShowAuthModal(false);
+          }
+        }}
+        onSuccess={handleAuthSuccess}
+        planId={planId || undefined}
+      />
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-800/50 rounded-xl border border-slate-700 p-6 sm:p-8"
-        >
-          <h1 className="text-3xl sm:text-4xl font-bebas text-white mb-6 text-center">
-            Оформление подписки
-          </h1>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          {/* Кнопка назад */}
+          <Button
+            onClick={() => router.push('/')}
+            variant="outline"
+            className="mb-6"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Назад
+          </Button>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-slate-800/50 rounded-xl border border-slate-700 p-6 sm:p-8"
+          >
+            <h1 className="text-3xl sm:text-4xl font-bebas text-white mb-6 text-center">
+              Оформление подписки
+            </h1>
+
+            {/* Информация об авторизации */}
+            {telegramId ? (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 bg-green-600/10 border border-green-600/20 rounded-lg"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-green-600/20 rounded-full">
+                      <User className="w-5 h-5 text-green-400" />
+                    </div>
+                    <div>
+                      <p className="text-green-400 font-medium">
+                        Авторизован через Telegram
+                      </p>
+                      {telegramUser?.firstName && (
+                        <p className="text-sm text-gray-400">
+                          {telegramUser.firstName} {telegramUser.lastName || ''}
+                          {telegramUser.username && ` (@${telegramUser.username})`}
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-500">ID: {telegramId}</p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => setShowAuthModal(true)}
+                    variant="outline"
+                    size="sm"
+                  >
+                    Изменить
+                  </Button>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 bg-yellow-600/10 border border-yellow-600/20 rounded-lg"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="w-5 h-5 text-yellow-400" />
+                    <div>
+                      <p className="text-yellow-400 font-medium">
+                        Требуется авторизация через Telegram
+                      </p>
+                      <p className="text-sm text-gray-400">
+                        Для покупки подписки необходимо авторизоваться
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => setShowAuthModal(true)}
+                    className="bg-blue-600 hover:bg-blue-700"
+                    size="sm"
+                  >
+                    Авторизоваться
+                  </Button>
+                </div>
+              </motion.div>
+            )}
 
           {/* Информация о тарифе */}
           {plan && (
@@ -291,7 +416,7 @@ function CheckoutPageContent() {
           {plan && (
             <Button
               onClick={handleBuy}
-              disabled={processing || !!error}
+              disabled={processing || !!error || !telegramId}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
               size="lg"
             >
@@ -299,6 +424,11 @@ function CheckoutPageContent() {
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                   Обработка...
+                </>
+              ) : !telegramId ? (
+                <>
+                  <User className="w-5 h-5 mr-2" />
+                  Сначала авторизуйтесь
                 </>
               ) : (
                 <>
@@ -327,8 +457,9 @@ function CheckoutPageContent() {
             </div>
           </div>
         </motion.div>
+        </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 

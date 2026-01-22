@@ -1,9 +1,12 @@
 /**
  * Client-side API utilities for MaxGroot
- * Все запросы идут через Next.js API routes (безопасно)
+ * В режиме разработки может подключаться напрямую к API
  */
 
-const API_BASE = '/apis';
+// В режиме разработки можно использовать прямое подключение к API
+const USE_DIRECT_API = process.env.NEXT_PUBLIC_USE_DIRECT_API === 'true';
+const DIRECT_API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://grangy.ru/api';
+const API_BASE = USE_DIRECT_API ? DIRECT_API_URL : '/apis';
 
 /**
  * Типы для API ответов
@@ -34,32 +37,31 @@ async function apiRequest<T>(
   options: RequestInit = {},
   retries = 3
 ): Promise<ApiResponse<T>> {
-  // ВАЖНО: Всегда используем относительный путь через Next.js API routes
-  // Это гарантирует, что запросы идут через сервер, а не напрямую к внешнему API
   const url = `${API_BASE}${endpoint}`;
-  
-  // Проверка, что мы не используем абсолютный URL (защита от ошибок)
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    console.error('❌ ОШИБКА: Используется абсолютный URL вместо относительного!', url);
-    return {
-      ok: false,
-      error: 'CONFIGURATION_ERROR',
-      message: 'Неправильная конфигурация API клиента',
-    };
-  }
   
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       console.log(`[API Client] ${options.method || 'GET'} ${url} (попытка ${attempt}/${retries})`);
       
-      // ВАЖНО: На клиенте ВСЕГДА используем относительный путь
-      // Это гарантирует, что запрос идет через Next.js API route, а не напрямую к внешнему API
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      };
+
+      // Если используем прямое подключение, добавляем API_SECRET из переменной окружения
+      // ВНИМАНИЕ: Это только для разработки! В продакшене используйте API routes
+      if (USE_DIRECT_API && typeof window !== 'undefined') {
+        const apiSecret = process.env.NEXT_PUBLIC_API_SECRET;
+        if (apiSecret) {
+          headers['X-Webapp-Secret'] = apiSecret;
+        } else {
+          console.warn('[DEV] NEXT_PUBLIC_API_SECRET не установлен. Запросы могут не работать!');
+        }
+      }
+      
       const response = await fetch(url, {
         ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
+        headers,
         // Важно: не кэшируем запросы к API
         cache: 'no-store',
       });
