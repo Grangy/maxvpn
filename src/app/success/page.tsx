@@ -1,9 +1,9 @@
 'use client';
 
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, MessageCircle, Home, Copy, ExternalLink, Loader2 } from 'lucide-react';
+import { CheckCircle, ArrowRight, MessageCircle, Home, Copy, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { isTelegramWebApp, getTelegramUser, initTelegramWebApp, getStoredPurchaseData, clearStoredPurchaseData } from '@/lib/telegram';
 
@@ -19,48 +19,9 @@ function SuccessPageContent() {
   const topup = searchParams.get('topup');
   const amount = searchParams.get('amount');
   
-  const [isTelegram, setIsTelegram] = useState(false);
-  const [telegramUser, setTelegramUser] = useState<{ telegramId: string; username?: string; firstName?: string } | null>(null);
-  const [linking, setLinking] = useState(false);
-  const [linked, setLinked] = useState(false);
   const [botAuthSent, setBotAuthSent] = useState(false);
   
-  useEffect(() => {
-    // Initialize Telegram WebApp if available
-    if (isTelegramWebApp()) {
-      setIsTelegram(true);
-      initTelegramWebApp();
-      const user = getTelegramUser();
-      if (user && user.id) {
-        setTelegramUser({
-          telegramId: String(user.id),
-          username: user.username,
-          firstName: user.first_name,
-        });
-        setLinked(true);
-      }
-    }
-    
-    // Check for stored purchase data
-    const stored = getStoredPurchaseData();
-    if (stored && !subscriptionUrl) {
-      // Redirect with stored data
-      const params = new URLSearchParams();
-      if (stored.subscriptionUrl) params.set('subscriptionUrl', stored.subscriptionUrl);
-      if (stored.subscriptionUrl2) params.set('subscriptionUrl2', stored.subscriptionUrl2);
-      if (stored.planName) params.set('planName', stored.planName);
-      if (stored.endDate) params.set('endDate', stored.endDate);
-      if (stored.telegramId) params.set('telegramId', stored.telegramId);
-      router.replace(`/success?${params.toString()}`);
-    }
-
-    // Автоматически авторизуем в боте после успешной покупки
-    if (telegramId && subscriptionUrl && !botAuthSent && !topup) {
-      authorizeInBot();
-    }
-  }, [router, subscriptionUrl, telegramId, botAuthSent, topup]);
-
-  const authorizeInBot = async () => {
+  const authorizeInBot = useCallback(async () => {
     if (!telegramId || botAuthSent) return;
     
     setBotAuthSent(true);
@@ -83,41 +44,32 @@ function SuccessPageContent() {
       console.error('Error authorizing in bot:', error);
       // Не критично, продолжаем
     }
-  };
+  }, [telegramId, planName, subscriptionUrl, botAuthSent]);
   
-  const handleTelegramAuth = async () => {
-    if (!isTelegramWebApp() || !window.Telegram?.WebApp.initData) {
-      // Open Telegram bot
-      window.open('https://t.me/maxvpn_offbot', '_blank');
-      return;
+  useEffect(() => {
+    // Initialize Telegram WebApp if available
+    if (isTelegramWebApp()) {
+      initTelegramWebApp();
     }
     
-    setLinking(true);
-    try {
-      const response = await fetch('/apis/auth/telegram', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          initData: window.Telegram.WebApp.initData,
-        }),
-      });
-      
-      const data = await response.json();
-      if (data.ok && data.data) {
-        setTelegramUser({
-          telegramId: data.data.telegramId,
-          username: data.data.username,
-          firstName: data.data.firstName,
-        });
-        setLinked(true);
-        clearStoredPurchaseData();
-      }
-    } catch (error) {
-      console.error('Error linking Telegram:', error);
-    } finally {
-      setLinking(false);
+    // Check for stored purchase data
+    const stored = getStoredPurchaseData();
+    if (stored && !subscriptionUrl) {
+      // Redirect with stored data
+      const params = new URLSearchParams();
+      if (stored.subscriptionUrl) params.set('subscriptionUrl', stored.subscriptionUrl);
+      if (stored.subscriptionUrl2) params.set('subscriptionUrl2', stored.subscriptionUrl2);
+      if (stored.planName) params.set('planName', stored.planName);
+      if (stored.endDate) params.set('endDate', stored.endDate);
+      if (stored.telegramId) params.set('telegramId', stored.telegramId);
+      router.replace(`/success?${params.toString()}`);
     }
-  };
+
+    // Автоматически авторизуем в боте после успешной покупки
+    if (telegramId && subscriptionUrl && !botAuthSent && !topup) {
+      authorizeInBot();
+    }
+  }, [router, subscriptionUrl, telegramId, botAuthSent, topup, authorizeInBot]);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);

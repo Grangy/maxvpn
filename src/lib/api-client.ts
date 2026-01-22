@@ -43,9 +43,9 @@ async function apiRequest<T>(
     try {
       console.log(`[API Client] ${options.method || 'GET'} ${url} (попытка ${attempt}/${retries})`);
       
-      const headers: HeadersInit = {
+      const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        ...options.headers,
+        ...(options.headers as Record<string, string> || {}),
       };
 
       // Если используем прямое подключение, добавляем API_SECRET из переменной окружения

@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { X, Loader2, AlertCircle, CheckCircle2, MessageCircle } from 'lucide-react';
-import { isTelegramWebApp, getTelegramUser, initTelegramWebApp } from '@/lib/telegram';
+import { X, Loader2, AlertCircle, MessageCircle } from 'lucide-react';
+import { isTelegramWebApp, initTelegramWebApp } from '@/lib/telegram';
 
 interface TelegramAuthModalProps {
   isOpen: boolean;
@@ -27,19 +27,7 @@ export default function TelegramAuthModal({
   const [error, setError] = useState<string | null>(null);
   const [isTelegram, setIsTelegram] = useState(false);
 
-  useEffect(() => {
-    if (isOpen) {
-      const isTG = isTelegramWebApp();
-      setIsTelegram(isTG);
-      if (isTG) {
-        initTelegramWebApp();
-        // Автоматически авторизуем если в Telegram WebApp
-        handleTelegramAuth();
-      }
-    }
-  }, [isOpen]);
-
-  const handleTelegramAuth = async () => {
+  const handleTelegramAuth = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -78,7 +66,19 @@ export default function TelegramAuthModal({
     } finally {
       setLoading(false);
     }
-  };
+  }, [planId, onSuccess]);
+
+  useEffect(() => {
+    if (isOpen) {
+      const isTG = isTelegramWebApp();
+      setIsTelegram(isTG);
+      if (isTG) {
+        initTelegramWebApp();
+        // Автоматически авторизуем если в Telegram WebApp
+        handleTelegramAuth();
+      }
+    }
+  }, [isOpen, handleTelegramAuth]);
 
   const handleManualAuth = () => {
     const botUrl = `https://t.me/maxvpn_offbot${planId ? `?start=plan_${planId}` : ''}`;

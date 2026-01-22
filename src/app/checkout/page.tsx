@@ -18,7 +18,6 @@ function CheckoutPageContent() {
   const telegramIdParam = searchParams.get('telegramId');
 
   const [plan, setPlan] = useState<Plan | null>(null);
-  const [allPlans, setAllPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +28,6 @@ function CheckoutPageContent() {
     lastName?: string;
   } | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
 
   // Инициализация Telegram ID
   useEffect(() => {
@@ -85,7 +83,6 @@ function CheckoutPageContent() {
 
     setLoading(true);
     setError(null);
-    setRetryCount(0);
 
     try {
       const response = await getPlans();
@@ -109,8 +106,6 @@ function CheckoutPageContent() {
         return;
       }
 
-      setAllPlans(response.data);
-
       // Находим выбранный план
       const selectedPlan = response.data.find((p: Plan) => p.id === planId);
       if (selectedPlan) {
@@ -131,7 +126,6 @@ function CheckoutPageContent() {
   }, [loadPlans]);
 
   const handleRetry = () => {
-    setRetryCount(prev => prev + 1);
     loadPlans();
   };
 
