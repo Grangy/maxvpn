@@ -1,5 +1,5 @@
 /**
- * API utilities for MaxGroot VPN API
+ * API utilities for MaxGroot Secure Connection API
  */
 
 const API_URL = process.env.API_URL || 'https://grangy.ru/api';
@@ -23,7 +23,7 @@ export function getApiSecret(): string {
 }
 
 /**
- * Make a request to the MaxGroot VPN API
+ * Make a request to the MaxGroot Secure Connection API
  */
 export async function apiRequest<T>(
   endpoint: string,
